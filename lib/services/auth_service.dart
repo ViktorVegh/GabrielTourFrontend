@@ -4,8 +4,7 @@ import 'package:gabriel_tour_app/dtos/login_request.dart';
 import 'package:gabriel_tour_app/dtos/register_request.dart';
 
 class AuthService {
-  final String baseUrl =
-      'http://localhost:9090'; // Adjust the base URL as needed
+  final String baseUrl = 'http://localhost:9090';
 
   // Register user
   Future<String> register(RegisterRequest request) async {
@@ -16,7 +15,8 @@ class AuthService {
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body); // Return the token or success message
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      return responseData['token'];
     } else {
       throw Exception('Failed to register: ${response.body}');
     }
@@ -31,16 +31,15 @@ class AuthService {
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body); // Return the token or success message
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      return responseData['token'];
     } else {
       throw Exception('Failed to login: ${response.body}');
     }
   }
 
-  // Logout (this would just invalidate the token client-side)
+  // Logout
   Future<void> logout() async {
-    // Assuming the token is stored in local storage or elsewhere
-    // You can clear the token or perform other client-side actions
     print("Logged out successfully");
   }
 }

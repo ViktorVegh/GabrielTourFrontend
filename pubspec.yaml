@@ -10,10 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.3 
+  http: ^1.2.2  # Updated for compatibility
   cupertino_icons: ^1.0.6
   jwt_decoder: ^2.0.1 
-  shared_preferences: ^2.0.15  
+  shared_preferences: ^2.0.15
+  flutter_svg: ^2.0.10+1  # Latest version
 
 dev_dependencies:
   flutter_test:
