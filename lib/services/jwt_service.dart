@@ -17,7 +17,17 @@ class JwtService {
   // Decode the JWT token and get the role
   String getRoleFromToken(String token) {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    return decodedToken['role']; // Assuming the token has a 'role' field
+    return decodedToken['role'];
+  }
+
+  // Decode the JWT token and get the user ID from `sub`
+  Future<int?> getUserIdFromToken() async {
+    String? token = await getToken();
+    if (token != null) {
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      return int.tryParse(decodedToken['sub']);
+    }
+    return null;
   }
 
   // Check if the token is expired

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../dtos/tee_time_dto.dart'; // Use TeeTimeDTO instead of TeeTime
-import '../../widgets/tee_time_widget.dart'; // Import TeeTimeWidget component
-import 'package:gabriel_tour_app/widgets/role_specific_navbar.dart'; // Import RoleSpecificNavbar
-import 'package:gabriel_tour_app/services/tee_time_service.dart'; // Import TeeTimeService
-import 'package:gabriel_tour_app/services/jwt_service.dart'; // Import JwtService
+import '../../dtos/tee_time_dto.dart';
+import '../../widgets/tee_time_widget.dart';
+import 'package:gabriel_tour_app/widgets/role_specific_navbar.dart';
+import 'package:gabriel_tour_app/services/tee_time_service.dart';
+import 'package:gabriel_tour_app/services/jwt_service.dart';
 
 class TeeTimesScreen extends StatefulWidget {
   const TeeTimesScreen({Key? key}) : super(key: key);
@@ -13,8 +13,9 @@ class TeeTimesScreen extends StatefulWidget {
 }
 
 class _TeeTimesScreenState extends State<TeeTimesScreen> {
+  final JwtService _authService = JwtService();
   final TeeTimeService _teeTimeService = TeeTimeService(JwtService());
-  List<TeeTimeDTO> _teeTimes = []; // Use TeeTimeDTO
+  List<TeeTimeDTO> _teeTimes = [];
   bool _isLoading = true;
 
   @override
@@ -28,13 +29,27 @@ class _TeeTimesScreenState extends State<TeeTimesScreen> {
       _isLoading = true;
     });
 
-    int userId = 1; // Replace with actual user ID from context/session
-    final fetchedTeeTimes = await _teeTimeService.getTeeTimesByUserId(userId);
+    try {
+      int? userId = await _authService
+          .getUserIdFromToken(); // Retrieve userId from AuthService
+      if (userId == null) {
+        throw Exception("Failed to retrieve user ID.");
+      }
 
-    setState(() {
-      _teeTimes = fetchedTeeTimes ?? []; // Set fetched TeeTimeDTO list directly
-      _isLoading = false;
-    });
+      final fetchedTeeTimes = await _teeTimeService.getTeeTimesByUserId(userId);
+
+      setState(() {
+        _teeTimes = fetchedTeeTimes ?? [];
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
+      );
+    }
   }
 
   @override
@@ -59,7 +74,7 @@ class _TeeTimesScreenState extends State<TeeTimesScreen> {
                           'Golf Course Name';
 
                       return TeeTimeWidget(
-                        teeTime: teeTime, // Use TeeTimeDTO directly
+                        teeTime: teeTime,
                         golfCourseName: placeholderGolfCourseName,
                       );
                     },
