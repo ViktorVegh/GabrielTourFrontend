@@ -3,6 +3,7 @@ import 'package:gabriel_tour_app/services/auth_service.dart';
 import 'package:gabriel_tour_app/dtos/login_request.dart';
 import 'package:gabriel_tour_app/dtos/register_request.dart';
 import 'package:gabriel_tour_app/services/jwt_service.dart';
+import 'package:gabriel_tour_app/screens/office/tee_time_create.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -73,15 +74,22 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _navigateToRoleBasedScreen(String role) {
-    // Use Navigator to push the right screen depending on the role
     if (role == 'user') {
       Navigator.pushReplacementNamed(context, '/userTrips');
     } else if (role == 'tourguide') {
       Navigator.pushReplacementNamed(context, '/tourGuideTrips');
     } else if (role == 'driver') {
       Navigator.pushReplacementNamed(context, '/driverCalendar');
+    } else if (role == 'office') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              const CreateTeeTimeScreen(), // No need for allPersons parameter
+        ),
+      );
     } else {
-      _showError("Rola užívateľa nebola rospoznaná");
+      _showError("Rola užívateľa nebola rozpoznaná");
     }
   }
 
@@ -175,7 +183,12 @@ class AuthScreenState extends State<AuthScreen> {
                     _role = newValue!;
                   });
                 },
-                items: <String>['user', 'driver', 'tourguide']
+                items: <String>[
+                  'user',
+                  'driver',
+                  'tourguide',
+                  'office'
+                ] // Added 'office' here
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -184,7 +197,9 @@ class AuthScreenState extends State<AuthScreen> {
                           ? 'Používateľ'
                           : value == 'driver'
                               ? 'Šofér'
-                              : 'Sprievodca',
+                              : value == 'tourguide'
+                                  ? 'Sprievodca'
+                                  : 'Kancelária',
                     ),
                   );
                 }).toList(),

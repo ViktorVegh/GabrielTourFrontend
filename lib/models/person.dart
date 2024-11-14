@@ -13,7 +13,6 @@ class Person {
     this.profilePicture,
   });
 
-  // Method to convert from JSON
   factory Person.fromJson(Map<String, dynamic> json) {
     return Person(
       id: json['id'],
@@ -24,7 +23,6 @@ class Person {
     );
   }
 
-  // Method to convert to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,

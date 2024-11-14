@@ -15,6 +15,7 @@ dependencies:
   jwt_decoder: ^2.0.1 
   shared_preferences: ^2.0.15
   flutter_svg: ^2.0.10+1  # Latest version
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +33,4 @@ flutter:
     - assets/icons/navbar/my_trip_icon.svg
     - assets/icons/navbar/profile_icon.svg
     - assets/icons/navbar/search_trip_icon.svg
+    - assets/icons/tee_time.jpeg
