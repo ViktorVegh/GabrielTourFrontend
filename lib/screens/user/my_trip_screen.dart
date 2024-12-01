@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:gabriel_tour_app/services/order_service.dart';
+import 'package:gabriel_tour_app/dtos/order_dto.dart';
 import 'package:gabriel_tour_app/widgets/role_specific_navbar.dart';
-import 'package:gabriel_tour_app/screens/user/tee_times.dart'; // Import TeeTimesScreen
+import 'package:gabriel_tour_app/widgets/order_card_widget.dart'; // Import OrderCard
+import 'package:gabriel_tour_app/services/jwt_service.dart';
 
 class MyTripScreen extends StatelessWidget {
-  const MyTripScreen({Key? key}) : super(key: key);
+  final OrderService _orderService = OrderService(JwtService());
+
+  MyTripScreen({Key? key}) : super(key: key);
+
+  Future<OrderDTO?> fetchOrderDetails() async {
+    return await _orderService.getOrderDetailsForUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,65 +21,52 @@ class MyTripScreen extends StatelessWidget {
       initialIndex: 1,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Môj zájazd'),
+          title: const Text('Môj zájazd'),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          TeeTimesScreen(), // No need to pass teeTimes here
-                    ),
-                  );
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.0),
-                      child: Image.asset(
-                        'assets/icons/tee_time.jpeg',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Tee Times',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+        body: FutureBuilder<OrderDTO?>(
+          future: fetchOrderDetails(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Show loading indicator while fetching data
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError || snapshot.data == null) {
+              // Show error message if data fetch fails
+              return const Center(child: Text('Chyba pri načítavaní údajov.'));
+            } else {
+              // Use the fetched data to populate the OrderCard
+              final order = snapshot.data!;
+
+              // Extract and format dates
+              final startDate = DateTime.parse(order.startDate);
+              final endDate = DateTime.parse(order.endDate);
+              final travelDates =
+                  '${startDate.day}.${startDate.month} - ${endDate.day}.${endDate.month}';
+
+              // Extract year
+              final year = startDate.year.toString();
+
+              // Construct location (region, country)
+              final location = order.accommodationReservations.isNotEmpty
+                  ? [
+                      order.accommodationReservations[0].hotel.region,
+                      order.accommodationReservations[0].hotel.country
+                    ].where((part) => part != null).join(', ')
+                  : 'Unknown';
+
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: OrderCard(
+                    year: year,
+                    resortName: order.name,
+                    location: location.isNotEmpty ? location : 'N/A',
+                    orderNumber: order.id.toString(),
+                    travelDates: travelDates,
+                  ),
                 ),
-              ),
-            ),
-            Center(
-              child: Text(
-                'Toto je obrazovka s výletmi pre zákazníka',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-          ],
+              );
+            }
+          },
         ),
       ),
     );

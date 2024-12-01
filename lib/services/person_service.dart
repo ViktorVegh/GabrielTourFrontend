@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:gabriel_tour_app/dtos/person_dto.dart'; // Ensure you import the correct Person class
+import 'package:gabriel_tour_app/dtos/person_dto.dart';
 import 'jwt_service.dart';
 
 class PersonService {
