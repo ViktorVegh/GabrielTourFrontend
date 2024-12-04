@@ -31,7 +31,7 @@ class OrderService {
       print('Making GET request to: $url');
       print('Authorization: Bearer $token');
 
-      // Make the GET request with the correct `id` parameter
+      // Make the GET request with the `id` parameter
       final response = await http.get(
         Uri.parse(url),
         headers: {
@@ -44,7 +44,7 @@ class OrderService {
       print('Response status: ${response.statusCode}');
 
       // Decode the response explicitly using utf8.decode
-      final decodedBody = utf8.decode(response.bodyBytes); // Fix for encoding
+      final decodedBody = utf8.decode(response.bodyBytes);
       print('Decoded Response Body: $decodedBody');
 
       // Parse the response JSON
