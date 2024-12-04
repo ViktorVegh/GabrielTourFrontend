@@ -258,6 +258,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
+    final sliderTop = screenHeight * 0.08; // The top position of the slider
+    final sliderHeight = screenHeight * 0.25; // The height of the slider
+    final mainContentPadding =
+        sliderTop + sliderHeight; // Calculate padding dynamically
+
     return RoleSpecificNavbar(
       role: 'user',
       initialIndex: 1,
@@ -293,7 +298,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 : 0;
 
             return SingleChildScrollView(
-              // Ensures scrollable content
               child: Stack(
                 children: [
                   // Hotel image
@@ -306,13 +310,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                     ),
                   ),
-                  // Transportation slider overlaying the image
+                  // Transportation slider
                   Positioned(
-                    top: screenHeight * 0.1, // Adjust positioning
+                    top: sliderTop, // Dynamic positioning
                     left: 0,
                     right: 0,
                     child: SizedBox(
-                      height: screenHeight * 0.25, // Height of slider
+                      height: sliderHeight, // Dynamic height
                       child: TransportationSlider(
                         transportations: order.transportationReservations
                             .map((transport) => {
@@ -344,17 +348,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                     ),
                   ),
-                  // Main content below the slider
+                  // Main content
                   Padding(
                     padding: EdgeInsets.only(
-                        top: screenHeight * 0.37), // Space below the slider
+                        top: mainContentPadding), // Dynamic padding
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  screenWidth * 0.04), // Horizontal padding
+                              horizontal: screenWidth * 0.04),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -365,8 +368,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     child: Text(
                                       resortName,
                                       style: TextStyle(
-                                        fontSize: screenHeight *
-                                            0.035, // Adjust font size
+                                        fontSize: screenHeight * 0.035,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -375,42 +377,38 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   if (stars > 0)
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: screenWidth * 0.02), // Padding
+                                          left: screenWidth * 0.02),
                                       child: Text(
                                         '★' * stars,
                                         style: TextStyle(
-                                          fontSize: screenHeight *
-                                              0.025, // Adjust font size
+                                          fontSize: screenHeight * 0.025,
                                           color: Colors.orange,
                                         ),
                                       ),
                                     ),
                                 ],
                               ),
-                              SizedBox(height: screenHeight * 0.01), // Spacing
+                              SizedBox(height: screenHeight * 0.01),
                               Text(
                                 location,
                                 style: TextStyle(
-                                  fontSize:
-                                      screenHeight * 0.02, // Adjust font size
+                                  fontSize: screenHeight * 0.02,
                                   color: Colors.grey[700],
                                 ),
                               ),
                               Text(
                                 travelDates,
                                 style: TextStyle(
-                                  fontSize:
-                                      screenHeight * 0.018, // Adjust font size
+                                  fontSize: screenHeight * 0.018,
                                   color: Colors.grey,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: screenHeight * 0.02), // Spacing
-                        // Services card
+                        SizedBox(height: screenHeight * 0.02),
                         SizedBox(
-                          height: screenHeight * 0.25, // Adjust card height
+                          height: screenHeight * 0.25,
                           child: ServicesCard(
                             orderNumber: order.id.toString(),
                             accommodations: order.accommodationReservations,

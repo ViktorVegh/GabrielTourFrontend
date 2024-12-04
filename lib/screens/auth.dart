@@ -279,7 +279,6 @@ class AuthScreenState extends State<AuthScreen> {
     String password = _passwordController.text.trim();
 
     if (_isLoginMode) {
-      // Login logic
       if (email.isEmpty || password.isEmpty) {
         _showError("Email a heslo nesmú byť prázdne");
         return;
@@ -290,17 +289,13 @@ class AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         ));
-
-        // Save the token to SharedPreferences
         final JwtService jwtService = JwtService();
         await jwtService.saveToken(token);
-
         Navigator.pushReplacementNamed(context, '/userTrips');
       } catch (error) {
         _showError("Prihlásenie zlyhalo: ${error.toString()}");
       }
     } else {
-      // Password reset logic
       if (email.isEmpty) {
         _showError("Zadajte email, ktorý používate v Gabriel Tour.");
         return;
@@ -365,91 +360,102 @@ class AuthScreenState extends State<AuthScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-                height: screenHeight * 0.1), // Top spacing relative to height
-            Image.asset(
-              'assets/icons/gabrieltour-logo-2023.png',
-              height: screenHeight * 0.1,
-            ),
-            SizedBox(height: screenHeight * 0.05),
-            Text(
-              _isLoginMode ? 'Prihlásenie' : 'Vytvorenie hesla',
-              style: TextStyle(
-                fontSize: screenHeight * 0.03, // Font size relative to height
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF5C4033),
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.03),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: "Email",
-                hintText: "Zadajte email, ktorý používate v Gabriel Tour",
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            if (_isLoginMode)
-              Column(
+      resizeToAvoidBottomInset:
+          true, // Ensures resizing when the keyboard pops up
+      body: GestureDetector(
+        onTap: () =>
+            FocusScope.of(context).unfocus(), // Dismiss keyboard on tap outside
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: screenHeight * 0.02),
+                  SizedBox(height: screenHeight * 0.1), // Top spacing
+                  Image.asset(
+                    'assets/icons/gabrieltour-logo-2023.png',
+                    height: screenHeight * 0.1,
+                  ),
+                  SizedBox(height: screenHeight * 0.05),
+                  Text(
+                    _isLoginMode ? 'Prihlásenie' : 'Vytvorenie hesla',
+                    style: TextStyle(
+                      fontSize: screenHeight * 0.03,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF5C4033),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.03),
                   TextField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(labelText: "Heslo"),
-                    obscureText: true,
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: "Email",
+                      hintText: "Zadajte email, ktorý používate v Gabriel Tour",
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  if (_isLoginMode)
+                    Column(
+                      children: [
+                        SizedBox(height: screenHeight * 0.02),
+                        TextField(
+                          controller: _passwordController,
+                          decoration: const InputDecoration(labelText: "Heslo"),
+                          obscureText: true,
+                        ),
+                      ],
+                    ),
+                  SizedBox(height: screenHeight * 0.03),
+                  ElevatedButton(
+                    onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5C4033),
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * 0.015,
+                        horizontal: screenWidth * 0.08,
+                      ),
+                    ),
+                    child: Text(
+                      _isLoginMode ? "Prihlásiť sa" : "Odoslať overovací email",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenHeight * 0.02,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  TextButton(
+                    onPressed: _toggleMode,
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.02,
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: _isLoginMode
+                                ? "Nemáte vytvorené heslo? "
+                                : "Späť na ",
+                          ),
+                          TextSpan(
+                            text: _isLoginMode
+                                ? "Vytvorenie hesla"
+                                : "Prihlásenie",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF5C4033),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
-            SizedBox(height: screenHeight * 0.03),
-            ElevatedButton(
-              onPressed: _submit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5C4033),
-                padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.015,
-                  horizontal: screenWidth * 0.08,
-                ),
-              ),
-              child: Text(
-                _isLoginMode ? "Prihlásiť sa" : "Odoslať overovací email",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenHeight * 0.02,
-                ),
-              ),
             ),
-            SizedBox(height: screenHeight * 0.015),
-            TextButton(
-              onPressed: _toggleMode,
-              child: RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontSize: screenHeight * 0.02,
-                    color: Colors.black,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: _isLoginMode
-                          ? "Nemáte vytvorené heslo? "
-                          : "Späť na ",
-                    ),
-                    TextSpan(
-                      text: _isLoginMode ? "Vytvorenie hesla" : "Prihlásenie",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF5C4033),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
