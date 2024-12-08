@@ -1,164 +1,27 @@
-// import 'package:flutter/material.dart';
-// import 'package:gabriel_tour_app/screens/user/tee_times.dart';
-// import 'package:gabriel_tour_app/screens/user/transportation_screen.dart';
-// import 'package:gabriel_tour_app/screens/user/accommodation_screen.dart';
-// import 'package:gabriel_tour_app/screens/user/additional_services_screen.dart';
-// import 'package:gabriel_tour_app/dtos/order_dto.dart';
-
-// class ServicesCard extends StatelessWidget {
-//   final String orderNumber;
-//   final List<AccommodationReservationDTO> accommodations;
-//   final List<PriceDTO> services;
-
-//   const ServicesCard({
-//     Key? key,
-//     required this.orderNumber,
-//     required this.accommodations,
-//     required this.services,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: EdgeInsets.zero,
-//       padding: const EdgeInsets.all(16.0),
-//       color: Colors.transparent,
-//       child: Column(
-//         children: [
-//           // Order number
-//           Text(
-//             "Číslo zájazdu $orderNumber",
-//             style: TextStyle(
-//               fontSize: 18,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           const SizedBox(height: 24),
-//           // Icons with labels
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceAround,
-//             children: [
-//               _buildServiceIcon(
-//                 context,
-//                 Icons.directions_bus,
-//                 "Doprava",
-//                 () => Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => TransportationScreen(),
-//                   ),
-//                 ),
-//               ),
-//               _buildServiceIcon(
-//                 context,
-//                 Icons.golf_course,
-//                 "Tee Times",
-//                 () => Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => TeeTimesScreen(),
-//                   ),
-//                 ),
-//               ),
-//               _buildServiceIcon(
-//                 context,
-//                 Icons.hotel,
-//                 "Ubytovanie",
-//                 accommodations.isNotEmpty
-//                     ? () => Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) => AccommodationScreen(
-//                               accommodation: accommodations[
-//                                   0], // Pass the first accommodation
-//                             ),
-//                           ),
-//                         )
-//                     : null,
-//               ),
-//               _buildServiceIcon(
-//                 context,
-//                 Icons.miscellaneous_services,
-//                 "Služby",
-//                 services.isNotEmpty
-//                     ? () => Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) =>
-//                                 AdditionalServicesScreen(services: services),
-//                           ),
-//                         )
-//                     : null,
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildServiceIcon(
-//     BuildContext context,
-//     IconData icon,
-//     String label,
-//     VoidCallback? onTap,
-//   ) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Column(
-//         children: [
-//           Container(
-//             width: 70,
-//             height: 70,
-//             decoration: BoxDecoration(
-//               color: Colors.grey[200],
-//               borderRadius: BorderRadius.circular(16),
-//               boxShadow: [
-//                 BoxShadow(
-//                   color: Colors.grey.withOpacity(0.2),
-//                   blurRadius: 8,
-//                   offset: Offset(0, 4),
-//                 ),
-//               ],
-//             ),
-//             child: Icon(
-//               icon,
-//               size: 36,
-//               color: onTap != null ? Colors.blue : Colors.grey,
-//             ),
-//           ),
-//           const SizedBox(height: 8),
-//           Text(
-//             label,
-//             style: TextStyle(
-//               fontSize: 14,
-//               fontWeight: FontWeight.w500,
-//               color: onTap != null ? Colors.black : Colors.grey,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:gabriel_tour_app/screens/user/tee_times.dart';
 import 'package:gabriel_tour_app/screens/user/transportation_screen.dart';
 import 'package:gabriel_tour_app/screens/user/accommodation_screen.dart';
 import 'package:gabriel_tour_app/screens/user/additional_services_screen.dart';
-import 'package:gabriel_tour_app/dtos/order_dto.dart';
+import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
+import 'package:gabriel_tour_app/dtos/accommodation_dto.dart';
+import 'package:gabriel_tour_app/dtos/transportation_reservation_dto.dart';
+import 'package:gabriel_tour_app/dtos/price_dto.dart';
 
 class ServicesCard extends StatelessWidget {
   final String orderNumber;
   final List<AccommodationReservationDTO> accommodations;
   final List<PriceDTO> services;
+  final List<TeeTimeDTO> teeTimes;
+  final List<TransportationReservationDTO> transportations;
 
   const ServicesCard({
     Key? key,
     required this.orderNumber,
     required this.accommodations,
     required this.services,
+    required this.teeTimes,
+    required this.transportations,
   }) : super(key: key);
 
   @override
@@ -169,7 +32,7 @@ class ServicesCard extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.zero,
-      padding: EdgeInsets.all(screenWidth * 0.04), // 4% of screen width
+      padding: EdgeInsets.all(screenWidth * 0.04),
       color: Colors.transparent,
       child: Column(
         children: [
@@ -177,11 +40,11 @@ class ServicesCard extends StatelessWidget {
           Text(
             "Číslo zájazdu $orderNumber",
             style: TextStyle(
-              fontSize: screenHeight * 0.022, // 2.2% of screen height
+              fontSize: screenHeight * 0.022,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: screenHeight * 0.03), // 3% of screen height
+          SizedBox(height: screenHeight * 0.03),
 
           // Icons with labels
           Row(
@@ -191,12 +54,16 @@ class ServicesCard extends StatelessWidget {
                 context,
                 Icons.directions_bus,
                 "Doprava",
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TransportationScreen(),
-                  ),
-                ),
+                transportations.isNotEmpty
+                    ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TransportationScreen(
+                              transportations: transportations,
+                            ),
+                          ),
+                        )
+                    : null,
                 screenHeight,
                 screenWidth,
               ),
@@ -204,12 +71,16 @@ class ServicesCard extends StatelessWidget {
                 context,
                 Icons.golf_course,
                 "Tee Times",
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TeeTimesScreen(),
-                  ),
-                ),
+                teeTimes.isNotEmpty
+                    ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TeeTimesScreen(
+                              teeTimes: teeTimes,
+                            ),
+                          ),
+                        )
+                    : null,
                 screenHeight,
                 screenWidth,
               ),
@@ -266,30 +137,30 @@ class ServicesCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: screenWidth * 0.18, // 18% of screen width
-            height: screenWidth * 0.18, // Keep it square
+            width: screenWidth * 0.18,
+            height: screenWidth * 0.18,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(screenWidth * 0.04), // 4%
+              borderRadius: BorderRadius.circular(screenWidth * 0.04),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
-                  blurRadius: screenHeight * 0.01, // 1% of screen height
-                  offset: Offset(0, screenHeight * 0.005), // Vertical shadow
+                  blurRadius: screenHeight * 0.01,
+                  offset: Offset(0, screenHeight * 0.005),
                 ),
               ],
             ),
             child: Icon(
               icon,
-              size: screenHeight * 0.04, // 4% of screen height
+              size: screenHeight * 0.04 > 40 ? 40 : screenHeight * 0.04,
               color: onTap != null ? Colors.blue : Colors.grey,
             ),
           ),
-          SizedBox(height: screenHeight * 0.01), // 1% of screen height
+          SizedBox(height: screenHeight * 0.01),
           Text(
             label,
             style: TextStyle(
-              fontSize: screenHeight * 0.018, // 1.8% of screen height
+              fontSize: screenHeight * 0.018,
               fontWeight: FontWeight.w500,
               color: onTap != null ? Colors.black : Colors.grey,
             ),

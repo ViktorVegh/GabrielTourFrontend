@@ -4,7 +4,6 @@ class LoginRequest {
 
   LoginRequest({required this.email, required this.password});
 
-  // Convert DTO to JSON
   Map<String, dynamic> toJson() {
     return {
       'email': email,

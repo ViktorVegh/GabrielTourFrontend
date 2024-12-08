@@ -9,7 +9,6 @@ class PersonService {
   PersonService(this._jwtService);
 
   Future<List<PersonDTO>> getAllPersons() async {
-    // Changed List<Person> to List<PersonDTO>
     final token = await _jwtService.getToken();
     final response = await http.get(
       Uri.parse('http://localhost:9090/api/person/all'),
@@ -21,9 +20,7 @@ class PersonService {
 
     if (response.statusCode == 200) {
       List<dynamic> body = json.decode(response.body);
-      return body
-          .map((dynamic item) => PersonDTO.fromJson(item))
-          .toList(); // Ensure using PersonDTO
+      return body.map((dynamic item) => PersonDTO.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load persons');
     }
@@ -41,8 +38,7 @@ class PersonService {
     );
 
     if (response.statusCode == 200) {
-      return PersonDTO.fromJson(
-          json.decode(response.body)); // Ensure using PersonDTO
+      return PersonDTO.fromJson(json.decode(response.body));
     } else {
       return null;
     }
@@ -59,8 +55,7 @@ class PersonService {
     );
 
     if (response.statusCode == 200) {
-      return PersonDTO.fromJson(
-          json.decode(response.body)); // Ensure using PersonDTO
+      return PersonDTO.fromJson(json.decode(response.body));
     } else {
       return null;
     }

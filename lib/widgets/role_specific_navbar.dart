@@ -5,7 +5,7 @@ import 'package:gabriel_tour_app/widgets/driver_navbar.dart';
 
 class RoleSpecificNavbar extends StatefulWidget {
   final String role;
-  final int initialIndex; // Add initialIndex to track the correct initial tab
+  final int initialIndex;
   final Widget child;
 
   RoleSpecificNavbar(
@@ -16,21 +16,19 @@ class RoleSpecificNavbar extends StatefulWidget {
 }
 
 class _RoleSpecificNavbarState extends State<RoleSpecificNavbar> {
-  int _currentIndex = 0; // Default value
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _currentIndex =
-        widget.initialIndex; // Set the initial index from the screen
+    _currentIndex = widget.initialIndex;
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _currentIndex = index; // Update the selected index when a tab is tapped
+      _currentIndex = index;
     });
 
-    // Perform navigation based on the role and the selected tab
     switch (widget.role) {
       case 'user':
         _navigateUser(index);
@@ -96,7 +94,7 @@ class _RoleSpecificNavbarState extends State<RoleSpecificNavbar> {
   Widget build(BuildContext context) {
     Widget bottomNavbar;
 
-    // Render correct navbar based on role
+    // navbar based on role
     switch (widget.role) {
       case 'user':
         bottomNavbar = UserNavbar(

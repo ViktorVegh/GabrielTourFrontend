@@ -13,7 +13,6 @@ class RegisterRequest {
     this.role = "user",
   });
 
-  // Convert DTO to JSON
   Map<String, dynamic> toJson() {
     return {
       'email': email,
@@ -24,7 +23,6 @@ class RegisterRequest {
     };
   }
 
-  // Create DTO from JSON (if necessary)
   factory RegisterRequest.fromJson(Map<String, dynamic> json) {
     return RegisterRequest(
       email: json['email'],

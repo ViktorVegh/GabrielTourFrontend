@@ -7,7 +7,7 @@ class UserNavbar extends StatelessWidget {
   final Function(int) onTap;
 
   const UserNavbar({required this.currentIndex, required this.onTap, Key? key})
-      : super(key: key); // Adding 'const' and 'key'
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class UserNavbar extends StatelessWidget {
             colorFilter: ColorFilter.mode(
               currentIndex == 0 ? Color(0xFFE4733A) : Colors.grey,
               BlendMode.srcIn,
-            ), // Using colorFilter instead of color
+            ),
           ),
           label: 'Vyhľadaj zájazdy',
         ),

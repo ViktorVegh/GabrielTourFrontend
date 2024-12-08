@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:gabriel_tour_app/dtos/tee_time_request_dto.dart';
 import 'package:http/http.dart' as http;
-import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
 import 'jwt_service.dart';
+import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
+import 'package:gabriel_tour_app/dtos/tee_time_request_dto.dart';
 
 class TeeTimeService {
   final String baseUrl = 'http://localhost:9090/api/teetimes';
@@ -10,44 +10,74 @@ class TeeTimeService {
 
   TeeTimeService(this._jwtService);
 
-  // Get tee times by user ID
-  Future<List<TeeTimeDTO>?> getTeeTimesByUserId(int userId) async {
-    final token = await _jwtService.getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/user/$userId'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
+  Future<List<TeeTimeDTO>?> getTeeTimesForUser() async {
+    try {
+      final userId = await _jwtService.getUserIdFromToken();
+      if (userId == null) {
+        print('Error: User ID not found in token.');
+        return null;
+      }
 
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse
-          .map((teeTime) => TeeTimeDTO.fromJson(teeTime))
-          .toList();
-    } else {
-      // Handle error
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
+
+      final url = '$baseUrl/user/$userId';
+      print('Making GET request to: $url');
+      print('Authorization: Bearer $token');
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List jsonResponse = json.decode(response.body);
+        return jsonResponse.map((e) => TeeTimeDTO.fromJson(e)).toList();
+      } else {
+        print(
+            'Error: Failed to fetch tee times. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error fetching tee times: $e');
+      print('Stack trace: $stackTrace');
       return null;
     }
   }
 
-  // Create a new tee time
   Future<TeeTimeDTO?> createTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
-    final token = await _jwtService.getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/create'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(teeTimeRequest.toJson()),
-    );
+    try {
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
 
-    if (response.statusCode == 200) {
-      return TeeTimeDTO.fromJson(json.decode(response.body));
-    } else {
-      // Handle error
+      final response = await http.post(
+        Uri.parse('$baseUrl/create'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(teeTimeRequest.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return TeeTimeDTO.fromJson(json.decode(response.body));
+      } else {
+        print(
+            'Error: Failed to create tee time. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error creating tee time: $e');
+      print('Stack trace: $stackTrace');
       return null;
     }
   }
