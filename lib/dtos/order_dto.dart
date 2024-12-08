@@ -1,6 +1,6 @@
-import 'package:gabriel_tour_app/dtos/accommodation_dto.dart';
-import 'package:gabriel_tour_app/dtos/price_dto.dart';
-import 'package:gabriel_tour_app/dtos/transportation_reservation_dto.dart';
+import 'accommodation_dto.dart';
+import 'transportation_reservation_dto.dart';
+import 'price_dto.dart';
 
 class OrderDTO {
   final int id;
