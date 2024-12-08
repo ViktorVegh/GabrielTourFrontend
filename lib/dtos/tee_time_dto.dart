@@ -2,8 +2,8 @@ class TeeTimeDTO {
   final int id;
   final DateTime teeTime;
   final int groupSize;
-  final List<int> userIds; // List of user IDs
-  final int golfCourseId; // Changed to int for golfCourseId
+  final List<int> userIds;
+  final int golfCourseId;
   final bool green;
   final int holes;
   final int adults;
@@ -15,7 +15,7 @@ class TeeTimeDTO {
     required this.teeTime,
     required this.groupSize,
     required this.userIds,
-    required this.golfCourseId, // Using golfCourseId as an integer
+    required this.golfCourseId,
     required this.green,
     required this.holes,
     required this.adults,
@@ -23,14 +23,13 @@ class TeeTimeDTO {
     this.note,
   });
 
-  // Convert JSON to TeeTimeDTO
   factory TeeTimeDTO.fromJson(Map<String, dynamic> json) {
     return TeeTimeDTO(
       id: json['id'],
       teeTime: DateTime.parse(json['teeTime']),
       groupSize: json['groupSize'],
       userIds: List<int>.from(json['userIds']),
-      golfCourseId: json['golfCourseId'], // Deserialize as an integer
+      golfCourseId: json['golfCourseId'],
       green: json['green'],
       holes: json['holes'],
       adults: json['adults'],
@@ -39,14 +38,13 @@ class TeeTimeDTO {
     );
   }
 
-  // Convert TeeTimeDTO to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'teeTime': teeTime.toIso8601String(),
       'groupSize': groupSize,
       'userIds': userIds,
-      'golfCourseId': golfCourseId, // Serialize golfCourseId as integer
+      'golfCourseId': golfCourseId,
       'green': green,
       'holes': holes,
       'adults': adults,

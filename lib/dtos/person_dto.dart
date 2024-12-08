@@ -13,18 +13,16 @@ class PersonDTO {
     this.profilePicture,
   });
 
-  // Factory method for JSON deserialization
   factory PersonDTO.fromJson(Map<String, dynamic> json) {
     return PersonDTO(
-      id: json['id'] ?? 0, // Provide default if null
-      email: json['email'] ?? '', // Provide default if null
+      id: json['id'] ?? 0,
+      email: json['email'] ?? '',
       name: json['name'],
       role: json['role'],
       profilePicture: json['profilePicture'],
     );
   }
 
-  // Method for JSON serialization
   Map<String, dynamic> toJson() {
     return {
       'id': id,

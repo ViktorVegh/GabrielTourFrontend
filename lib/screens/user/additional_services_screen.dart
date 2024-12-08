@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabriel_tour_app/widgets/role_specific_navbar.dart';
-import 'package:gabriel_tour_app/dtos/order_dto.dart';
+import 'package:gabriel_tour_app/dtos/price_dto.dart';
 
 class AdditionalServicesScreen extends StatelessWidget {
   final List<PriceDTO> services;

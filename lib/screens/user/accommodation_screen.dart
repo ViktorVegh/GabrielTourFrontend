@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gabriel_tour_app/dtos/order_dto.dart';
+import 'package:gabriel_tour_app/dtos/accommodation_dto.dart';
 
 class AccommodationScreen extends StatelessWidget {
   final AccommodationReservationDTO accommodation;
@@ -22,11 +22,9 @@ class AccommodationScreen extends StatelessWidget {
     final int nights = accommodation.numberOfNights;
     final int beds = accommodation.beds;
     final int extraBeds = accommodation.extraBeds;
-    final String mealType =
-        accommodation.mealType ?? 'Bez stravy'; // MealType default
-    final String notes = accommodation.note.isNotEmpty
-        ? accommodation.note
-        : 'Žiadne poznámky'; // Notes default
+    final String mealType = accommodation.mealType ?? 'Bez stravy';
+    final String notes =
+        accommodation.note.isNotEmpty ? accommodation.note : 'Žiadne poznámky';
 
     return Scaffold(
       appBar: AppBar(

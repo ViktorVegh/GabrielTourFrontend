@@ -1,3 +1,4 @@
+
 # name: gabriel_tour_app
 # description: "A new Flutter project."
 # publish_to: 'none'
@@ -10,25 +11,26 @@
 # dependencies:
 #   flutter:
 #     sdk: flutter
-#   http: ^1.2.2  # Updated for compatibility
+#   http: ^1.2.2
 #   cupertino_icons: ^1.0.6
-#   jwt_decoder: ^2.0.1 
+#   jwt_decoder: ^2.0.1
 #   shared_preferences: ^2.0.15
-#   flutter_svg: ^2.0.10+1  # Latest version
+#   flutter_svg: ^2.0.10+1
 #   intl: ^0.17.0
 #   xml: ^6.1.0
-#   mockito: ^5.3.2
-#   build_runner: ^2.3.3
 
 # dev_dependencies:
 #   flutter_test:
 #     sdk: flutter
-#   flutter_lints: ^3.0.0
+#   integration_test:
+#     sdk: flutter
+#   mockito: ^5.0.16
+#   flutter_lints: ^2.0.0
+#   build_runner: ^2.3.3
 
 # flutter:
 #   uses-material-design: true
 
-#   # This is where you add your assets
 #   assets:
 #     - assets/icons/gabrieltour-logo-2023.png
 #     - assets/icons/navbar/calendar_icon.svg
@@ -38,7 +40,8 @@
 #     - assets/icons/navbar/search_trip_icon.svg
 #     - assets/icons/tee_time.jpeg
 #     - assets/icons/hotel.jpg
-    
+
+
 name: gabriel_tour_app
 description: "A new Flutter project."
 publish_to: 'none'
@@ -62,9 +65,15 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
-  mockito: ^5.3.2
+  integration_test:
+    sdk: flutter
+  mockito: ^5.0.16
+  flutter_lints: ^2.0.0
   build_runner: ^2.3.3
+  flutter_driver:
+    sdk: flutter   
+  test: ^1.20.0
+
 
 flutter:
   uses-material-design: true
