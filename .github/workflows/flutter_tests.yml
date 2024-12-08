@@ -19,11 +19,10 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: stable
+          flutter-version: '3.13.4' 
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Run Unit Tests
         run: flutter test --no-pub
-
