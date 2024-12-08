@@ -3,6 +3,9 @@ import 'package:gabriel_tour_app/screens/auth.dart';
 import 'package:gabriel_tour_app/screens/user/my_trip_screen.dart';
 import 'package:gabriel_tour_app/screens/tour_guide/trips_screen.dart';
 import 'package:gabriel_tour_app/screens/driver/calendar_screen.dart';
+import 'package:gabriel_tour_app/services/drive_service.dart';
+import 'package:gabriel_tour_app/services/jwt_service.dart';
+import 'package:gabriel_tour_app/services/order_service.dart'; // Import OrderService
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final jwtService = JwtService();
+    final driveService = DriveService(jwtService);
+
     return MaterialApp(
       title: 'Gabriel Tour App',
       theme: ThemeData(
@@ -22,9 +28,11 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const AuthScreen(), // Default auth screen
-        '/userTrips': (context) => MyTripScreen(), // Screen for users
+        '/userTrips': (context) => MyTripScreen(
+            orderService: OrderService(jwtService)), // Pass OrderService
         '/tourGuideTrips': (context) => TripsScreen(), // Screen for tour guides
-        '/driverCalendar': (context) => CalendarScreen(), // Screen for drivers
+        '/driverCalendar': (context) =>
+            CalendarScreen(driveService: driveService)
       },
     );
   }

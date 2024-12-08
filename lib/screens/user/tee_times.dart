@@ -30,8 +30,7 @@ class _TeeTimesScreenState extends State<TeeTimesScreen> {
     });
 
     try {
-      int? userId = await _authService
-          .getUserIdFromToken(); // Retrieve userId from AuthService
+      int? userId = await _authService.getUserIdFromToken();
       if (userId == null) {
         throw Exception("Failed to retrieve user ID.");
       }

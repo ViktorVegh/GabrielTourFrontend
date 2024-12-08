@@ -6,21 +6,21 @@ import 'package:gabriel_tour_app/dtos/register_request.dart';
 class AuthService {
   final String baseUrl = 'http://localhost:9090';
 
-  // Register user
-  Future<String> register(RegisterRequest request) async {
-    final url = Uri.parse('$baseUrl/auth/register');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode(request.toJson());
+  // // Register user
+  // Future<String> register(RegisterRequest request) async {
+  //   final url = Uri.parse('$baseUrl/auth/register');
+  //   final headers = {'Content-Type': 'application/json'};
+  //   final body = jsonEncode(request.toJson());
 
-    final response = await http.post(url, headers: headers, body: body);
+  //   final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      return responseData['token'];
-    } else {
-      throw Exception('Failed to register: ${response.body}');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //     return responseData['token'];
+  //   } else {
+  //     throw Exception('Failed to register: ${response.body}');
+  //   }
+  // }
 
   // Login user
   Future<String> login(LoginRequest request) async {
@@ -41,5 +41,21 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     print("Logged out successfully");
+  }
+
+  // Call the reset-password endpoint
+  Future<String> resetPassword(String email) async {
+    final url = Uri.parse('$baseUrl/reset-password');
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({'email': email});
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      return responseData['message'];
+    } else {
+      throw Exception('Failed to send reset link: ${response.body}');
+    }
   }
 }
