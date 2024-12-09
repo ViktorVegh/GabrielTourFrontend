@@ -45,7 +45,7 @@ class AuthService {
 
   //  reset-password endpoint
   Future<String> resetPassword(String email) async {
-    final url = Uri.parse('$baseUrl/reset-password');
+    final url = Uri.parse('$baseUrl/auth/reset-password');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({'email': email});
 
