@@ -4,7 +4,7 @@ import 'jwt_service.dart';
 import 'package:gabriel_tour_app/dtos/order_dto.dart';
 
 class OrderService {
-  final String baseUrl = 'http://localhost:9090/order';
+  final String baseUrl = 'http://13.53.236.35:9090/order';
   final JwtService _jwtService;
 
   OrderService(this._jwtService);

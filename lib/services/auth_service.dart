@@ -4,7 +4,7 @@ import 'package:gabriel_tour_app/dtos/login_request.dart';
 import 'package:gabriel_tour_app/dtos/register_request.dart';
 
 class AuthService {
-  final String baseUrl = 'http://localhost:9090';
+  final String baseUrl = 'http://13.53.236.35:9090';
 
   // // Register user
   // Future<String> register(RegisterRequest request) async {
