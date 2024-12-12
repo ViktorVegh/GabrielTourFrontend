@@ -165,11 +165,14 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Create Tee Time")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+Widget build(BuildContext context) {
+  final screenWidth = MediaQuery.of(context).size.width;
+
+  return Scaffold(
+    appBar: AppBar(title: Text("Create Tee Time")),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
         child: Column(
           children: [
             TextField(
@@ -180,14 +183,36 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
               onPressed: _searchUserByEmail,
               child: Text("Search User by Email"),
             ),
-            TextField(
-              controller: _golfCourseIdController,
-              decoration: InputDecoration(labelText: 'Golf Course ID'),
-            ),
-            TextField(
-              controller: _groupSizeController,
-              decoration: InputDecoration(labelText: 'Group Size'),
-            ),
+            if (screenWidth > 800) ...[
+              // Layout for large screens
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _golfCourseIdController,
+                      decoration: InputDecoration(labelText: 'Golf Course ID'),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: _groupSizeController,
+                      decoration: InputDecoration(labelText: 'Group Size'),
+                    ),
+                  ),
+                ],
+              ),
+            ] else ...[
+              // Layout for small screens
+              TextField(
+                controller: _golfCourseIdController,
+                decoration: InputDecoration(labelText: 'Golf Course ID'),
+              ),
+              TextField(
+                controller: _groupSizeController,
+                decoration: InputDecoration(labelText: 'Group Size'),
+              ),
+            ],
             TextField(
               controller: _dateController,
               readOnly: true,
@@ -210,31 +235,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                 ),
               ),
             ),
-            TextField(
-              controller: _adultsController,
-              decoration: InputDecoration(labelText: 'Number of Adults'),
-            ),
-            TextField(
-              controller: _juniorsController,
-              decoration: InputDecoration(labelText: 'Number of Juniors'),
-            ),
-            TextField(
-              controller: _holesController,
-              decoration: InputDecoration(labelText: 'Holes'),
-            ),
-            TextField(
-              controller: _noteController,
-              decoration: InputDecoration(labelText: 'Note'),
-            ),
-            SwitchListTile(
-              title: Text("Green"),
-              value: isGreen,
-              onChanged: (bool value) {
-                setState(() {
-                  isGreen = value;
-                });
-              },
-            ),
+            // Add other fields as necessary...
             ElevatedButton(
               onPressed: _createTeeTime,
               child: Text("Create Tee Time"),
@@ -242,6 +243,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

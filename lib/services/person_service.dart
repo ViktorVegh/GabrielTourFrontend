@@ -11,7 +11,7 @@ class PersonService {
   Future<List<PersonDTO>> getAllPersons() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/person/all'),
+      Uri.parse('http://13.53.236.35:9090/api/person/all'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ class PersonService {
     final token = await _jwtService.getToken();
     final response = await http.get(
       Uri.parse(
-          'http://localhost:9090/api/person/search_by_email?email=$email'),
+          'http://13.53.236.35:9090/api/person/search_by_email?email=$email'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ class PersonService {
   Future<PersonDTO?> getPersonById(int id, String role) async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/person/$id/$role'),
+      Uri.parse('http://13.53.236.35:9090/api/person/$id/$role'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

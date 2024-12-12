@@ -5,7 +5,7 @@ import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
 import 'package:gabriel_tour_app/dtos/tee_time_request_dto.dart';
 
 class TeeTimeService {
-  final String baseUrl = 'http://localhost:9090/api/teetimes';
+  final String baseUrl = 'http://13.53.236.35:9090/api/teetimes';
   final JwtService _jwtService;
 
   TeeTimeService(this._jwtService);
