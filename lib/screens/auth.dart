@@ -30,47 +30,63 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _submit() async {
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
+  String email = _emailController.text.trim();
+  String password = _passwordController.text.trim();
 
-    if (_isLoginMode) {
-      if (email.isEmpty || password.isEmpty) {
-        _showError("Email a heslo nesmú byť prázdne");
-        return;
-      }
+  if (_isLoginMode) {
+    if (email.isEmpty || password.isEmpty) {
+      _showError("Email and password cannot be empty");
+      return;
+    }
 
-      try {
-        final token = await widget.authService.login(
-          LoginRequest(
-            email: email,
-            password: password,
-          ),
-        );
-        await widget.jwtService.saveToken(token);
+    try {
+      // Perform login and get the token
+      final token = await widget.authService.login(
+        LoginRequest(email: email, password: password),
+      );
+
+      // Save the token
+      await widget.jwtService.saveToken(token);
+
+      // Decode the user role from the token
+      final String role = widget.jwtService.getRoleFromToken(token);
+
+      // Navigate based on the role
+      if (role == 'office') {
+        Navigator.pushReplacementNamed(context, '/officeDashboard');
+      } else if (role == 'user') {
         Navigator.pushReplacementNamed(context, '/userTrips');
-      } catch (error) {
-        _showError("Prihlásenie zlyhalo: ${error.toString()}");
+      } else if (role == 'tourGuide') {
+        Navigator.pushReplacementNamed(context, '/tourGuideTrips');
+      } else if (role == 'driver') {
+        Navigator.pushReplacementNamed(context, '/driverCalendar');
+      } else {
+        _showError("Unknown role. Please contact support.");
       }
-    } else {
-      if (email.isEmpty) {
-        _showError("Zadajte email, ktorý používate v Gabriel Tour.");
-        return;
-      }
+    } catch (error) {
+      _showError("Login failed: ${error.toString()}");
+    }
+  } else {
+    // Reset password logic
+    if (email.isEmpty) {
+      _showError("Enter the email you use for Gabriel Tour.");
+      return;
+    }
 
-      try {
-        final responseMessage = await widget.authService.resetPassword(email);
+    try {
+      final responseMessage = await widget.authService.resetPassword(email);
 
-        if (responseMessage ==
-            "Password reset link has been sent to your email.") {
-          _showSuccess("Odkaz na obnovenie hesla bol odoslaný na váš email.");
-        } else {
-          _showError("Email nebol nájdený.");
-        }
-      } catch (e) {
-        _showError("Chyba: Nepodarilo sa odoslať email na vytvorenie hesla.");
+      if (responseMessage ==
+          "Password reset link has been sent to your email.") {
+        _showSuccess("Password reset link sent to your email.");
+      } else {
+        _showError("Email not found.");
       }
+    } catch (e) {
+      _showError("Error: Unable to send password reset email.");
     }
   }
+}
 
   void _showError(String message) {
     log('DEBUG: Showing error dialog with message: $message');

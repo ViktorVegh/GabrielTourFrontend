@@ -5,7 +5,7 @@ import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
 import 'package:gabriel_tour_app/dtos/tee_time_request_dto.dart';
 
 class TeeTimeService {
-  final String baseUrl = 'http://localhost:9090/api/teetimes';
+  final String baseUrl = 'http://13.53.236.35:9090/api/teetimes';
   final JwtService _jwtService;
 
   TeeTimeService(this._jwtService);
@@ -77,6 +77,45 @@ class TeeTimeService {
       }
     } catch (e, stackTrace) {
       print('Error creating tee time: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
+  Future<List<TeeTimeDTO>?> getTeeTimesForSpecificUser(int id) async {
+    try {
+      if (id == null) {
+        print('Error: User ID not found in token.');
+        return null;
+      }
+
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
+
+      final url = '$baseUrl/user/$id';
+      print('Making GET request to: $url');
+      print('Authorization: Bearer $token');
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List jsonResponse = json.decode(response.body);
+        return jsonResponse.map((e) => TeeTimeDTO.fromJson(e)).toList();
+      } else {
+        print(
+            'Error: Failed to fetch tee times. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error fetching tee times: $e');
       print('Stack trace: $stackTrace');
       return null;
     }

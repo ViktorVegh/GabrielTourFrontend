@@ -7,14 +7,14 @@ import '../../dtos/person_dto.dart';
 import '../../dtos/tee_time_request_dto.dart';
 import '../../dtos/tee_time_dto.dart';
 
-class CreateTeeTimeScreen extends StatefulWidget {
-  const CreateTeeTimeScreen({Key? key}) : super(key: key);
+class EditTeeTimeScreen extends StatefulWidget {
+  const EditTeeTimeScreen({Key? key}) : super(key: key);
 
   @override
-  _CreateTeeTimeScreenState createState() => _CreateTeeTimeScreenState();
+  _EditTeeTimeScreenState createState() => _EditTeeTimeScreenState();
 }
 
-class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
+class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
   final JwtService _jwtService = JwtService();
 
   late final PersonService _personService;
@@ -31,6 +31,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   final TextEditingController _noteController = TextEditingController();
 
   List<int> userIds = [];
+  List<TeeTimeDTO> _userTeeTimes = []; 
   bool isGreen = false;
   bool needTransport = false;
   DateTime? _selectedDate;
@@ -53,7 +54,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
           userIds.add(user.id);
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User added: ${user.email}")),
+          SnackBar(content: Text("User added: ${user.name}")),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -62,26 +63,48 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       }
     }
   }
-  Future<void> _searchGolfCourseById() async {
-    final email = _emailController.text;
+ Future<void> _searchTeeTimeByEmail() async {
+  final email = _emailController.text;
+
+  if (email.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Please enter an email address.")),
+    );
+    return;
+  }
+
+  try {
     final PersonDTO? user = await _personService.searchPersonByEmail(email);
 
     if (mounted) {
       if (user != null) {
-        setState(() {
-          userIds.add(user.id);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User added: ${user.email}")),
-        );
+        final List<TeeTimeDTO>? teeTimes = await _teeTimeService.getTeeTimesForSpecificUser(user.id);
+        if (teeTimes != null && teeTimes.isNotEmpty) {
+          setState(() {
+            _userTeeTimes = teeTimes;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Tee times fetched successfully for ${user.name}")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("No tee times found for ${user.name}.")),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User not found")),
+          SnackBar(content: Text("User not found.")),
         );
       }
     }
+  } catch (e) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error fetching tee times: $e")),
+      );
+    }
   }
-
+}
   Future<void> _pickDate() async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -185,7 +208,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Tee Time")),
+      appBar: AppBar(title: Text("Uprav Tee Time")),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -200,7 +223,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Create a Tee Time",
+                    "Uprav Tee Time",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -215,6 +238,33 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _searchTeeTimeByEmail,
+                    child: Text("Fetch Tee Times"),
+                            ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Tee Times",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    _userTeeTimes.isNotEmpty
+                    ? ListView.builder(
+                    shrinkWrap: true, // Ensures it doesn't take up infinite height
+                    itemCount: _userTeeTimes.length,
+                    itemBuilder: (context, index) {
+                    final teeTime = _userTeeTimes[index];
+          return Card(
+            elevation: 2,
+            margin: EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              title: Text("Tee Time ID: ${teeTime.id}"),
+              subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
+            ),
+          );
+        },
+      )
+    : Text("No tee times available."),
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: _searchUserByEmail,
@@ -333,7 +383,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                         ),
                       ),
                       child: Text(
-                        "Create Tee Time",
+                        "Uprav Tee Time",
                         style: TextStyle(fontSize: 18),
                       ),
                     ),

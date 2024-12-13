@@ -8,6 +8,7 @@ class TeeTimeRequestDTO {
   final int adults;
   final int juniors;
   final String? note;
+  final bool transport;
 
   TeeTimeRequestDTO({
     required this.teeTime,
@@ -18,6 +19,7 @@ class TeeTimeRequestDTO {
     required this.holes,
     required this.adults,
     required this.juniors,
+    required this.transport,
     this.note,
   });
 
@@ -31,6 +33,7 @@ class TeeTimeRequestDTO {
       'holes': holes,
       'adults': adults,
       'juniors': juniors,
+      'transport': transport,
       'note': note,
     };
   }
