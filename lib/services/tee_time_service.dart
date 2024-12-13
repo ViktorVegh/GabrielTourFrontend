@@ -81,16 +81,16 @@ class TeeTimeService {
       return null;
     }
   }
-   Future<TeeTimeDTO?> deleteTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
+   Future<TeeTimeDTO?> editTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
     try {
       final token = await _jwtService.getToken();
       if (token == null) {
         print('Error: Token not found.');
         return null;
       }
-
-      final response = await http.post(
-        Uri.parse('$baseUrl/create'),
+      print('TeeTimeRequestDTO: ${json.encode(teeTimeRequest.toJson())}');
+      final response = await http.put(
+        Uri.parse('$baseUrl/edit_tee_time'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -102,11 +102,11 @@ class TeeTimeService {
         return TeeTimeDTO.fromJson(json.decode(response.body));
       } else {
         print(
-            'Error: Failed to create tee time. Status code: ${response.statusCode}');
+            'Error: Failed to edit tee time. Status code: ${response.statusCode}');
         return null;
       }
     } catch (e, stackTrace) {
-      print('Error creating tee time: $e');
+      print('Error editing tee time: $e');
       print('Stack trace: $stackTrace');
       return null;
     }

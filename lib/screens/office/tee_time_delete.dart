@@ -208,7 +208,7 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Uprav Tee Time")),
+      appBar: AppBar(title: Text("Vymaz Tee Time")),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -223,7 +223,7 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Uprav Tee Time",
+                    "Vymaz Tee Time",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -276,7 +276,7 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                         ),
                       ),
                       child: Text(
-                        "Uprav Tee Time",
+                        "Vymaz Tee Time",
                         style: TextStyle(fontSize: 18),
                       ),
                     ),

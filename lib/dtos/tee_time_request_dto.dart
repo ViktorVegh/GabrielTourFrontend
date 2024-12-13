@@ -1,4 +1,5 @@
 class TeeTimeRequestDTO {
+  final int? id;
   final DateTime teeTime;
   final int groupSize;
   final List<int> userIds;
@@ -11,6 +12,7 @@ class TeeTimeRequestDTO {
   final bool transport;
 
   TeeTimeRequestDTO({
+    this.id,
     required this.teeTime,
     required this.groupSize,
     required this.userIds,
@@ -25,6 +27,7 @@ class TeeTimeRequestDTO {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'teeTime': teeTime.toIso8601String(),
       'groupSize': groupSize,
       'userIds': userIds,

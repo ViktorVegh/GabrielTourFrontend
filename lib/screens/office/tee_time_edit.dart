@@ -29,7 +29,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
   final TextEditingController _juniorsController = TextEditingController();
   final TextEditingController _holesController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
-
+  final TextEditingController _idController = TextEditingController();
   List<int> userIds = [];
   List<TeeTimeDTO> _userTeeTimes = []; 
   bool isGreen = false;
@@ -134,8 +134,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
       });
     }
   }
-
-  Future<void> _createTeeTime() async {
+  Future<void> _editTeeTime() async {
     if (_selectedDate == null || _selectedTime == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -155,6 +154,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
       );
 
       final TeeTimeRequestDTO request = TeeTimeRequestDTO(
+        //id: selectedTeeTime!.id,
         golfCourseId: int.parse(_golfCourseIdController.text),
         teeTime: teeTime,
         groupSize: int.parse(_groupSizeController.text),
@@ -165,19 +165,20 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
         juniors: int.parse(_juniorsController.text),
         transport: needTransport,
         note: _noteController.text,
+        id: int.parse(_idController.text)
       );
 
-      final TeeTimeDTO? createdTeeTime =
-          await _teeTimeService.createTeeTime(request);
+      final TeeTimeDTO? editedTeeTime =
+          await _teeTimeService.editTeeTime(request);
 
       if (mounted) {
-        if (createdTeeTime != null) {
+        if (editedTeeTime != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Tee time created successfully")),
+            SnackBar(content: Text("Tee time edited successfully")),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to create tee time")),
+            SnackBar(content: Text("Failed to edit tee time")),
           );
         }
       }
@@ -185,7 +186,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text("Failed to create tee time. Check all fields.")),
+              content: Text("Failed to edit tee time. Check all fields.")),
         );
       }
     }
@@ -202,6 +203,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
     _juniorsController.dispose();
     _holesController.dispose();
     _noteController.dispose();
+    _idController.dispose();
     super.dispose();
   }
 
@@ -251,6 +253,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                     _userTeeTimes.isNotEmpty
                     ? ListView.builder(
   shrinkWrap: true, // Ensures it doesn't take up infinite height
+  physics: NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
   itemCount: _userTeeTimes.length,
   itemBuilder: (context, index) {
     final teeTime = _userTeeTimes[index];
@@ -261,19 +264,31 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
         title: Text("Tee Time ID: ${teeTime.id}"),
         subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
         onTap: () {
+          // Clear any focus before updating fields
+          FocusScope.of(context).unfocus();
+
           setState(() {
             // Populate fields when a tee time is tapped
             _golfCourseIdController.text = teeTime.golfCourseId.toString();
             _groupSizeController.text = teeTime.groupSize.toString();
+
+            // Set date and time for the text fields and the internal state
+            _selectedDate = teeTime.teeTime;
             _dateController.text = DateFormat('yyyy-MM-dd').format(teeTime.teeTime);
+
+            _selectedTime = TimeOfDay.fromDateTime(teeTime.teeTime);
             _timeController.text = DateFormat('HH:mm').format(teeTime.teeTime);
+
             _adultsController.text = teeTime.adults.toString();
             _juniorsController.text = teeTime.juniors.toString();
             _holesController.text = teeTime.holes.toString();
             _noteController.text = teeTime.note ?? '';
             isGreen = teeTime.green;
             needTransport = teeTime.transport;
+            _idController.text = teeTime.id.toString();
           });
+
+          // Show a confirmation message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Tee time ${teeTime.id} loaded into fields")),
           );
@@ -283,11 +298,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
   },
 )
     : Text("No tee times available."),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _searchUserByEmail,
-                    child: Text("Search User by Email"),
-                  ),
+                  
                   SizedBox(height: 20),
                   TextField(
                     controller: _golfCourseIdController,
@@ -393,7 +404,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                   SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                      onPressed: _createTeeTime,
+                      onPressed: _editTeeTime,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                         shape: RoundedRectangleBorder(
