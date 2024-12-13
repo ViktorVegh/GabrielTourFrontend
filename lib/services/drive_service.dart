@@ -11,7 +11,7 @@ class DriveService {
   Future<List<DriveDTO>> getDrivesForCurrentWeek() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://13.53.236.35:9090/api/drives/current-week'),
+      Uri.parse('https://13.53.236.35:9090/api/drives/current-week'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ class DriveService {
   }) async {
     final token = await _jwtService.getToken();
     final response = await http.put(
-      Uri.parse('http://13.53.236.35:9090/api/drives/$driveId/edit'),
+      Uri.parse('https://13.53.236.35:9090/api/drives/$driveId/edit'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
