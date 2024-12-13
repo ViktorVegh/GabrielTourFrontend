@@ -81,6 +81,36 @@ class TeeTimeService {
       return null;
     }
   }
+   Future<TeeTimeDTO?> deleteTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
+    try {
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/create'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(teeTimeRequest.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return TeeTimeDTO.fromJson(json.decode(response.body));
+      } else {
+        print(
+            'Error: Failed to create tee time. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error creating tee time: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
   Future<List<TeeTimeDTO>?> getTeeTimesForSpecificUser(int id) async {
     try {
       if (id == null) {

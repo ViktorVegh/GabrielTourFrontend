@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabriel_tour_app/screens/office/tee_time_create.dart';
+import 'package:gabriel_tour_app/screens/office/tee_time_delete.dart';
 import 'package:gabriel_tour_app/screens/office/tee_time_edit.dart';
 
 class OfficeWebDashboard extends StatelessWidget {
@@ -78,7 +79,7 @@ class NavigationPanel extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreateTeeTimeScreen(),
+                  builder: (context) => DeleteTeeTimeScreen(),
                 ),
               );
             },
