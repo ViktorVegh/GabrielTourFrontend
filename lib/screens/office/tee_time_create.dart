@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gabriel_tour_app/dtos/golf_course_dto.dart';
 import 'package:intl/intl.dart';
 import '../../services/person_service.dart';
 import '../../services/tee_time_service.dart';
@@ -21,6 +22,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   late final TeeTimeService _teeTimeService;
 
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _golfCourseSearchController = TextEditingController();
   final TextEditingController _golfCourseIdController = TextEditingController();
   final TextEditingController _groupSizeController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
@@ -62,23 +64,32 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       }
     }
   }
-  Future<void> _searchGolfCourseById() async {
-    final email = _emailController.text;
-    final PersonDTO? user = await _personService.searchPersonByEmail(email);
 
-    if (mounted) {
-      if (user != null) {
-        setState(() {
-          userIds.add(user.id);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User added: ${user.email}")),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User not found")),
-        );
+  Future<void> _searchGolfCourseByName() async {
+    final name = _golfCourseSearchController.text;
+
+    try {
+      final GolfCourseDTO? golfCourse =
+          await _teeTimeService.getGolfCourseByName(name);
+
+      if (mounted) {
+        if (golfCourse != null) {
+          setState(() {
+            _golfCourseIdController.text = golfCourse.id.toString();
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Golf course found: ${golfCourse.name}")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("No golf course found with name: $name")),
+          );
+        }
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error fetching golf course")),
+      );
     }
   }
 
@@ -171,6 +182,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   @override
   void dispose() {
     _emailController.dispose();
+    _golfCourseSearchController.dispose();
     _golfCourseIdController.dispose();
     _groupSizeController.dispose();
     _dateController.dispose();
@@ -219,6 +231,19 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                   ElevatedButton(
                     onPressed: _searchUserByEmail,
                     child: Text("Search User by Email"),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: _golfCourseSearchController,
+                    decoration: InputDecoration(
+                      labelText: 'Search Golf Course by Name',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _searchGolfCourseByName,
+                    child: Text("Search Golf Course"),
                   ),
                   SizedBox(height: 20),
                   TextField(
@@ -312,7 +337,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                       });
                     },
                   ),
-                   SizedBox(height: 10),
+                  SizedBox(height: 10),
                   SwitchListTile(
                     title: Text("Need Transport"),
                     value: needTransport,

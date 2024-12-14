@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:gabriel_tour_app/dtos/golf_course_dto.dart';
 import 'package:http/http.dart' as http;
 import 'jwt_service.dart';
 import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
@@ -50,6 +51,40 @@ class TeeTimeService {
       return null;
     }
   }
+Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
+    try {
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
+
+      final url = '$baseUrl/get_golf_course?name=$name';
+      print('Making GET request to: $url');
+      print('Authorization: Bearer $token');
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        return GolfCourseDTO.fromJson(jsonResponse);
+      } else {
+        print(
+            'Error: Failed to fetch golf course. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error fetching golf course: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
 
   Future<TeeTimeDTO?> createTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
     try {
@@ -58,7 +93,7 @@ class TeeTimeService {
         print('Error: Token not found.');
         return null;
       }
-
+      print(teeTimeRequest);
       final response = await http.post(
         Uri.parse('$baseUrl/create'),
         headers: {
