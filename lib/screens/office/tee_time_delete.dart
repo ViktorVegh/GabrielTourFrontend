@@ -36,7 +36,7 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
   bool needTransport = false;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-
+  int? _selectedTeeTimeId;
   @override
   void initState() {
     super.initState();
@@ -44,25 +44,6 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
     _teeTimeService = TeeTimeService(_jwtService);
   }
 
-  Future<void> _searchUserByEmail() async {
-    final email = _emailController.text;
-    final PersonDTO? user = await _personService.searchPersonByEmail(email);
-
-    if (mounted) {
-      if (user != null) {
-        setState(() {
-          userIds.add(user.id);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User added: ${user.name}")),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User not found")),
-        );
-      }
-    }
-  }
  Future<void> _searchTeeTimeByEmail() async {
   final email = _emailController.text;
 
@@ -105,90 +86,33 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
     }
   }
 }
-  Future<void> _pickDate() async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
-      });
-    }
-  }
-
-  Future<void> _pickTime() async {
-    TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedTime = picked;
-        _timeController.text = picked.format(context);
-      });
-    }
-  }
 
   Future<void> _deleteTeeTime() async {
-    if (_selectedDate == null || _selectedTime == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Please select both date and time")),
-        );
-      }
-      return;
-    }
+    if (_selectedTeeTimeId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Please select a tee time to delete")),
+    );
+    return;
+  }
 
-    try {
-      final DateTime teeTime = DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _selectedTime!.hour,
-        _selectedTime!.minute,
-      );
+  try {
+    // Call the delete method from TeeTimeService (ensure this exists in your service)
+    await _teeTimeService.deleteTeeTime(_selectedTeeTimeId!);
 
-      final TeeTimeRequestDTO request = TeeTimeRequestDTO(
-        golfCourseId: int.parse(_golfCourseIdController.text),
-        teeTime: teeTime,
-        groupSize: int.parse(_groupSizeController.text),
-        userIds: userIds,
-        green: isGreen,
-        holes: int.parse(_holesController.text),
-        adults: int.parse(_adultsController.text),
-        juniors: int.parse(_juniorsController.text),
-        transport: needTransport,
-        note: _noteController.text,
-      );
+    setState(() {
+      // Remove the deleted tee time from the list
+      _userTeeTimes.removeWhere((teeTime) => teeTime.id == _selectedTeeTimeId);
+      _selectedTeeTimeId = null; // Reset the selected ID
+    });
 
-      final TeeTimeDTO? createdTeeTime =
-          await _teeTimeService.createTeeTime(request);
-
-      if (mounted) {
-        if (createdTeeTime != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Tee time created successfully")),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to create tee time")),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text("Failed to create tee time. Check all fields.")),
-        );
-      }
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Tee time deleted successfully")),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to delete tee time: $e")),
+    );
+  }
   }
 
   @override
@@ -258,9 +182,16 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
             elevation: 2,
             margin: EdgeInsets.symmetric(vertical: 8),
             child: ListTile(
-              title: Text("Tee Time ID: ${teeTime.id}"),
-              subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
-            ),
+            title: Text("Tee Time ID: ${teeTime.id}"),
+            subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
+            selected: _selectedTeeTimeId == teeTime.id, // Highlight if selected
+            selectedTileColor: Colors.grey[300], // Optional: Highlight color
+            onTap: () {
+              setState(() {
+                _selectedTeeTimeId = teeTime.id; // Save the selected Tee Time ID
+                      });
+          },
+        )
           );
         },
       )
@@ -268,18 +199,18 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                   SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                      onPressed: _deleteTeeTime,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        "Vymaz Tee Time",
-                        style: TextStyle(fontSize: 18),
+                    onPressed: _selectedTeeTimeId != null ? _deleteTeeTime : null, // Only allow pressing if a tee time is selected
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    child: Text(
+                      "Vymaz Tee Time",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
                   ),
                 ],
               ),

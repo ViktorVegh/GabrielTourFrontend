@@ -150,4 +150,33 @@ class TeeTimeService {
       return null;
     }
   }
+  
+  Future<TeeTimeDTO?> deleteTeeTime(int id) async {
+    try {
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
+      final response = await http.delete(
+        Uri.parse('$baseUrl/delete_tee_time?id=$id'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return TeeTimeDTO.fromJson(json.decode(response.body));
+      } else {
+        print(
+            'Error: Failed to delete tee time. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error editing tee time: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
 }
