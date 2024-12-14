@@ -195,180 +195,221 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Create Tee Time")),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Create a Tee Time",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF764706),
-                    ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: Text("Create Tee Time")),
+    body: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Create a Tee Time",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF764706),
                   ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'User Email',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _searchUserByEmail,
-                    child: Text("Search User by Email"),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _golfCourseSearchController,
-                    decoration: InputDecoration(
-                      labelText: 'Search Golf Course by Name',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _searchGolfCourseByName,
-                    child: Text("Search Golf Course"),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _golfCourseIdController,
-                    decoration: InputDecoration(
-                      labelText: 'Golf Course ID',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _groupSizeController,
-                    decoration: InputDecoration(
-                      labelText: 'Group Size',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _dateController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'Date (yyyy-MM-dd)',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.calendar_today),
-                        onPressed: _pickDate,
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'User Email',
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                          labelStyle: TextStyle(fontSize: 14),
+                        ),
+                        style: TextStyle(fontSize: 14),
                       ),
-                      border: OutlineInputBorder(),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _timeController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'Time (HH:mm)',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.access_time),
-                        onPressed: _pickTime,
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: _searchUserByEmail,
+                      child: Text("Search User"),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _golfCourseSearchController,
+                        decoration: InputDecoration(
+                          labelText: 'Search Golf Course by Name',
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                          labelStyle: TextStyle(fontSize: 14),
+                        ),
+                        style: TextStyle(fontSize: 14),
                       ),
-                      border: OutlineInputBorder(),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _adultsController,
-                          decoration: InputDecoration(
-                            labelText: 'Number of Adults',
-                            border: OutlineInputBorder(),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: _searchGolfCourseByName,
+                      child: Text("Search Course"),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _golfCourseIdController,
+                        decoration: InputDecoration(
+                          labelText: 'Golf Course ID',
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                          labelStyle: TextStyle(fontSize: 14),
+                        ),
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _groupSizeController,
+                        decoration: InputDecoration(
+                          labelText: 'Group Size',
+                          border: OutlineInputBorder(),
+                        ),
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _dateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Date (yyyy-MM-dd)',
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.calendar_today),
+                            onPressed: _pickDate,
                           ),
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: TextField(
-                          controller: _juniorsController,
-                          decoration: InputDecoration(
-                            labelText: 'Number of Juniors',
-                            border: OutlineInputBorder(),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _timeController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Time (HH:mm)',
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.access_time),
+                            onPressed: _pickTime,
                           ),
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _holesController,
-                    decoration: InputDecoration(
-                      labelText: 'Holes',
-                      border: OutlineInputBorder(),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _noteController,
-                    decoration: InputDecoration(
-                      labelText: 'Note',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SwitchListTile(
-                    title: Text("Green"),
-                    value: isGreen,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isGreen = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  SwitchListTile(
-                    title: Text("Need Transport"),
-                    value: needTransport,
-                    onChanged: (bool value) {
-                      setState(() {
-                        needTransport = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: _createTeeTime,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _adultsController,
+                        decoration: InputDecoration(
+                          labelText: 'Number of Adults',
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                      child: Text(
-                        "Create Tee Time",
-                        style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _juniorsController,
+                        decoration: InputDecoration(
+                          labelText: 'Number of Juniors',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _holesController,
+                  decoration: InputDecoration(
+                    labelText: 'Holes',
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _noteController,
+                  decoration: InputDecoration(
+                    labelText: 'Note',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                SwitchListTile(
+                  title: Text("Green"),
+                  value: isGreen,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isGreen = value;
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  title: Text("Need Transport"),
+                  value: needTransport,
+                  onChanged: (bool value) {
+                    setState(() {
+                      needTransport = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _createTeeTime,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      "Create Tee Time",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
