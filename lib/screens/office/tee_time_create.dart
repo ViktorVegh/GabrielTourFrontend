@@ -31,6 +31,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   final TextEditingController _juniorsController = TextEditingController();
   final TextEditingController _holesController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _golfCourseCreateController = TextEditingController();
 
   List<int> userIds = [];
   bool isGreen = false;
@@ -64,6 +65,38 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       }
     }
   }
+  Future<void> _createGolfCourse() async {
+  final name = _golfCourseCreateController.text;
+
+  if (name.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Please enter a golf course name")),
+    );
+    return;
+  }
+
+  try {
+    final GolfCourseDTO? createdGolfCourse =
+        await _teeTimeService.createGolfCourse(name);
+
+    if (createdGolfCourse != null) {
+      setState(() {
+        _golfCourseIdController.text = createdGolfCourse.id.toString();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Golf course created: ${createdGolfCourse.name}")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to create golf course")),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error creating golf course")),
+    );
+  }
+}
 
   Future<void> _searchGolfCourseByName() async {
     final name = _golfCourseSearchController.text;
@@ -242,29 +275,46 @@ Widget build(BuildContext context) {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _golfCourseSearchController,
-                        decoration: InputDecoration(
-                          labelText: 'Search Golf Course by Name',
-                          border: OutlineInputBorder(),
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-                          labelStyle: TextStyle(fontSize: 14),
-                        ),
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: _searchGolfCourseByName,
-                      child: Text("Search Course"),
-                    ),
-                  ],
+       SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _golfCourseSearchController,
+                decoration: InputDecoration(
+                  labelText: 'Search Golf Course by Name',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                  labelStyle: TextStyle(fontSize: 14),
                 ),
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: _searchGolfCourseByName,
+              child: Text("Search"),
+            ),
+            SizedBox(width: 10), // Small gap between buttons
+            Expanded(
+              child: TextField(
+                controller: _golfCourseCreateController,
+                decoration: InputDecoration(
+                  labelText: 'Create Golf Course',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                  labelStyle: TextStyle(fontSize: 14),
+                ),
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: _createGolfCourse,
+              child: Text("Create"),
+            ),
+          ],
+        ),
                 SizedBox(height: 10),
                 Row(
                   children: [

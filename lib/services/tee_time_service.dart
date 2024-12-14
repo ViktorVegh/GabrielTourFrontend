@@ -85,6 +85,37 @@ Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
       return null;
     }
   }
+  
+   Future<GolfCourseDTO?> createGolfCourse(String name) async {
+  try {
+    final token = await _jwtService.getToken();
+    if (token == null) {
+      print('Error: Token not found.');
+      return null;
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/create_golf_course'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({'name': name}), // Fixed here
+    );
+
+    if (response.statusCode == 200) {
+      return GolfCourseDTO.fromJson(json.decode(response.body));
+    } else {
+      print(
+          'Error: Failed to create tee time. Status code: ${response.statusCode}');
+      return null;
+    }
+  } catch (e, stackTrace) {
+    print('Error creating tee time: $e');
+    print('Stack trace: $stackTrace');
+    return null;
+  }
+}
 
   Future<TeeTimeDTO?> createTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
     try {
