@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gabriel_tour_app/dtos/golf_course_dto.dart';
 import 'package:intl/intl.dart';
 import '../../services/person_service.dart';
 import '../../services/tee_time_service.dart';
@@ -8,21 +7,20 @@ import '../../dtos/person_dto.dart';
 import '../../dtos/tee_time_request_dto.dart';
 import '../../dtos/tee_time_dto.dart';
 
-class CreateTeeTimeScreen extends StatefulWidget {
-  const CreateTeeTimeScreen({Key? key}) : super(key: key);
+class EditTeeTimeScreen extends StatefulWidget {
+  const EditTeeTimeScreen({Key? key}) : super(key: key);
 
   @override
-  _CreateTeeTimeScreenState createState() => _CreateTeeTimeScreenState();
+  _EditTeeTimeScreenState createState() => _EditTeeTimeScreenState();
 }
 
-class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
+class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
   final JwtService _jwtService = JwtService();
 
   late final PersonService _personService;
   late final TeeTimeService _teeTimeService;
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _golfCourseSearchController = TextEditingController();
   final TextEditingController _golfCourseIdController = TextEditingController();
   final TextEditingController _groupSizeController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
@@ -31,8 +29,9 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   final TextEditingController _juniorsController = TextEditingController();
   final TextEditingController _holesController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
-
+  final TextEditingController _idController = TextEditingController();
   List<int> userIds = [];
+  List<TeeTimeDTO> _userTeeTimes = []; 
   bool isGreen = false;
   bool needTransport = false;
   DateTime? _selectedDate;
@@ -55,7 +54,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
           userIds.add(user.id);
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User added: ${user.email}")),
+          SnackBar(content: Text("User added: ${user.name}")),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -64,35 +63,48 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       }
     }
   }
+ Future<void> _searchTeeTimeByEmail() async {
+  final email = _emailController.text;
 
-  Future<void> _searchGolfCourseByName() async {
-    final name = _golfCourseSearchController.text;
+  if (email.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Please enter an email address.")),
+    );
+    return;
+  }
 
-    try {
-      final GolfCourseDTO? golfCourse =
-          await _teeTimeService.getGolfCourseByName(name);
+  try {
+    final PersonDTO? user = await _personService.searchPersonByEmail(email);
 
-      if (mounted) {
-        if (golfCourse != null) {
+    if (mounted) {
+      if (user != null) {
+        final List<TeeTimeDTO>? teeTimes = await _teeTimeService.getTeeTimesForSpecificUser(user.id);
+        if (teeTimes != null && teeTimes.isNotEmpty) {
           setState(() {
-            _golfCourseIdController.text = golfCourse.id.toString();
+            _userTeeTimes = teeTimes;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Golf course found: ${golfCourse.name}")),
+            SnackBar(content: Text("Tee times fetched successfully for ${user.name}")),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("No golf course found with name: $name")),
+            SnackBar(content: Text("No tee times found for ${user.name}.")),
           );
         }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("User not found.")),
+        );
       }
-    } catch (e) {
+    }
+  } catch (e) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error fetching golf course")),
+        SnackBar(content: Text("Error fetching tee times: $e")),
       );
     }
   }
-
+}
   Future<void> _pickDate() async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -122,8 +134,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       });
     }
   }
-
-  Future<void> _createTeeTime() async {
+  Future<void> _editTeeTime() async {
     if (_selectedDate == null || _selectedTime == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -143,6 +154,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       );
 
       final TeeTimeRequestDTO request = TeeTimeRequestDTO(
+        //id: selectedTeeTime!.id,
         golfCourseId: int.parse(_golfCourseIdController.text),
         teeTime: teeTime,
         groupSize: int.parse(_groupSizeController.text),
@@ -153,19 +165,20 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
         juniors: int.parse(_juniorsController.text),
         transport: needTransport,
         note: _noteController.text,
+        id: int.parse(_idController.text)
       );
 
-      final TeeTimeDTO? createdTeeTime =
-          await _teeTimeService.createTeeTime(request);
+      final TeeTimeDTO? editedTeeTime =
+          await _teeTimeService.editTeeTime(request);
 
       if (mounted) {
-        if (createdTeeTime != null) {
+        if (editedTeeTime != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Tee time created successfully")),
+            SnackBar(content: Text("Tee time edited successfully")),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to create tee time")),
+            SnackBar(content: Text("Failed to edit tee time")),
           );
         }
       }
@@ -173,7 +186,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text("Failed to create tee time. Check all fields.")),
+              content: Text("Failed to edit tee time. Check all fields.")),
         );
       }
     }
@@ -182,7 +195,6 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   @override
   void dispose() {
     _emailController.dispose();
-    _golfCourseSearchController.dispose();
     _golfCourseIdController.dispose();
     _groupSizeController.dispose();
     _dateController.dispose();
@@ -191,13 +203,14 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
     _juniorsController.dispose();
     _holesController.dispose();
     _noteController.dispose();
+    _idController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Tee Time")),
+      appBar: AppBar(title: Text("Uprav Tee Time")),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -212,7 +225,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Create a Tee Time",
+                    "Uprav Tee Time",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -227,24 +240,65 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _searchUserByEmail,
-                    child: Text("Search User by Email"),
-                  ),
                   SizedBox(height: 20),
-                  TextField(
-                    controller: _golfCourseSearchController,
-                    decoration: InputDecoration(
-                      labelText: 'Search Golf Course by Name',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: _searchGolfCourseByName,
-                    child: Text("Search Golf Course"),
-                  ),
+                    onPressed: _searchTeeTimeByEmail,
+                    child: Text("Fetch Tee Times"),
+                            ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Tee Times",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    _userTeeTimes.isNotEmpty
+                    ? ListView.builder(
+  shrinkWrap: true, // Ensures it doesn't take up infinite height
+  physics: NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
+  itemCount: _userTeeTimes.length,
+  itemBuilder: (context, index) {
+    final teeTime = _userTeeTimes[index];
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        title: Text("Tee Time ID: ${teeTime.id}"),
+        subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
+        onTap: () {
+          // Clear any focus before updating fields
+          FocusScope.of(context).unfocus();
+
+          setState(() {
+            // Populate fields when a tee time is tapped
+            _golfCourseIdController.text = teeTime.golfCourseId.toString();
+            _groupSizeController.text = teeTime.groupSize.toString();
+
+            // Set date and time for the text fields and the internal state
+            _selectedDate = teeTime.teeTime;
+            _dateController.text = DateFormat('yyyy-MM-dd').format(teeTime.teeTime);
+
+            _selectedTime = TimeOfDay.fromDateTime(teeTime.teeTime);
+            _timeController.text = DateFormat('HH:mm').format(teeTime.teeTime);
+
+            _adultsController.text = teeTime.adults.toString();
+            _juniorsController.text = teeTime.juniors.toString();
+            _holesController.text = teeTime.holes.toString();
+            _noteController.text = teeTime.note ?? '';
+            isGreen = teeTime.green;
+            needTransport = teeTime.transport;
+            _idController.text = teeTime.id.toString();
+          });
+
+          // Show a confirmation message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Tee time ${teeTime.id} loaded into fields")),
+          );
+        },
+      ),
+    );
+  },
+)
+    : Text("No tee times available."),
+                  
                   SizedBox(height: 20),
                   TextField(
                     controller: _golfCourseIdController,
@@ -337,7 +391,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                       });
                     },
                   ),
-                  SizedBox(height: 10),
+                   SizedBox(height: 10),
                   SwitchListTile(
                     title: Text("Need Transport"),
                     value: needTransport,
@@ -350,7 +404,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                   SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                      onPressed: _createTeeTime,
+                      onPressed: _editTeeTime,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                         shape: RoundedRectangleBorder(
@@ -358,7 +412,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
                         ),
                       ),
                       child: Text(
-                        "Create Tee Time",
+                        "Uprav Tee Time",
                         style: TextStyle(fontSize: 18),
                       ),
                     ),

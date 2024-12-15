@@ -5,6 +5,7 @@ class TeeTimeDTO {
   final List<int> userIds;
   final int golfCourseId;
   final bool green;
+  final bool transport;
   final int holes;
   final int adults;
   final int juniors;
@@ -17,6 +18,7 @@ class TeeTimeDTO {
     required this.userIds,
     required this.golfCourseId,
     required this.green,
+    required this.transport,
     required this.holes,
     required this.adults,
     required this.juniors,
@@ -24,19 +26,20 @@ class TeeTimeDTO {
   });
 
   factory TeeTimeDTO.fromJson(Map<String, dynamic> json) {
-    return TeeTimeDTO(
-      id: json['id'],
-      teeTime: DateTime.parse(json['teeTime']),
-      groupSize: json['groupSize'],
-      userIds: List<int>.from(json['userIds']),
-      golfCourseId: json['golfCourseId'],
-      green: json['green'],
-      holes: json['holes'],
-      adults: json['adults'],
-      juniors: json['juniors'],
-      note: json['note'],
-    );
-  }
+  return TeeTimeDTO(
+    id: json['id'],
+    teeTime: DateTime.parse(json['teeTime']),
+    groupSize: json['groupSize'],
+    userIds: List<int>.from(json['userIds']),
+    golfCourseId: json['golfCourseId'],
+    green: json['green'] ?? false, // Default to false if null
+    transport: json['need_transport'] ?? false, // Use default value
+    holes: json['holes'],
+    adults: json['adults'],
+    juniors: json['juniors'],
+    note: json['note'],
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {
@@ -46,6 +49,7 @@ class TeeTimeDTO {
       'userIds': userIds,
       'golfCourseId': golfCourseId,
       'green': green,
+      'transport': transport,
       'holes': holes,
       'adults': adults,
       'juniors': juniors,

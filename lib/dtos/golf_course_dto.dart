@@ -1,5 +1,5 @@
 class GolfCourseDTO {
-  final String id;
+  final int id;
   final String name;
 
   GolfCourseDTO({
@@ -9,7 +9,7 @@ class GolfCourseDTO {
 
   factory GolfCourseDTO.fromJson(Map<String, dynamic> json) {
     return GolfCourseDTO(
-      id: json['id'],
+      id: json['id'], // Convert 'id' to String if it's an int
       name: json['name'],
     );
   }

@@ -1,4 +1,5 @@
 class TeeTimeRequestDTO {
+  final int? id;
   final DateTime teeTime;
   final int groupSize;
   final List<int> userIds;
@@ -8,8 +9,10 @@ class TeeTimeRequestDTO {
   final int adults;
   final int juniors;
   final String? note;
+  final bool transport;
 
   TeeTimeRequestDTO({
+    this.id,
     required this.teeTime,
     required this.groupSize,
     required this.userIds,
@@ -18,11 +21,13 @@ class TeeTimeRequestDTO {
     required this.holes,
     required this.adults,
     required this.juniors,
+    required this.transport,
     this.note,
   });
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'teeTime': teeTime.toIso8601String(),
       'groupSize': groupSize,
       'userIds': userIds,
@@ -31,6 +36,7 @@ class TeeTimeRequestDTO {
       'holes': holes,
       'adults': adults,
       'juniors': juniors,
+      'transport': transport,
       'note': note,
     };
   }

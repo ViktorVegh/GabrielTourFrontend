@@ -48,6 +48,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:gabriel_tour_app/screens/auth.dart';
+
+import 'package:gabriel_tour_app/screens/office/office_web_dashboard.dart';
 import 'package:gabriel_tour_app/screens/user/my_trip_screen.dart';
 import 'package:gabriel_tour_app/screens/tour_guide/trips_screen.dart';
 import 'package:gabriel_tour_app/screens/driver/calendar_screen.dart';
@@ -60,6 +62,7 @@ import 'package:gabriel_tour_app/services/order_service.dart';
 import 'package:gabriel_tour_app/services/person_service.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
