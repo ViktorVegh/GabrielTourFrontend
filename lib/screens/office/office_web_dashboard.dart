@@ -81,10 +81,49 @@ class NavigationPanel extends StatelessWidget {
   }
 }
 
-class MainContent extends StatelessWidget {
+
+class MainContent extends StatefulWidget {
+  @override
+  _MainContentState createState() => _MainContentState();
+}
+class _MainContentState extends State<MainContent>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the animation controller
+    _controller = AnimationController(
+      duration: Duration(seconds: 2), // Total duration of the animation
+      vsync: this,
+    );
+
+    // Define the fade-in animation
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+
+    // Define the scale animation
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+
+    // Start the animation
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controller to free resources
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    // Calculate screen height
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Center(
@@ -92,12 +131,25 @@ class MainContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: screenHeight * 0.1), // Spacer above the logo
-          Image.asset(
-            'assets/icons/gabrieltour-logo-2023.png',
-            height: screenHeight * 0.1, // Adjust the height of the logo
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Opacity(
+                opacity: _opacityAnimation.value,
+                child: Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: child,
+                ),
+              );
+            },
+            child: Image.asset(
+              'assets/icons/gabrieltour-logo-2023.png',
+              height: screenHeight * 0.1, // Adjust the height of the logo
+            ),
           ),
         ],
       ),
     );
   }
+
 }
