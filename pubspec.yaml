@@ -1,47 +1,4 @@
 
-# name: gabriel_tour_app
-# description: "A new Flutter project."
-# publish_to: 'none'
-
-# version: 1.0.0+1
-
-# environment:
-#   sdk: '>=3.3.0 <4.0.0'
-
-# dependencies:
-#   flutter:
-#     sdk: flutter
-#   http: ^1.2.2
-#   cupertino_icons: ^1.0.6
-#   jwt_decoder: ^2.0.1
-#   shared_preferences: ^2.0.15
-#   flutter_svg: ^2.0.10+1
-#   intl: ^0.17.0
-#   xml: ^6.1.0
-
-# dev_dependencies:
-#   flutter_test:
-#     sdk: flutter
-#   integration_test:
-#     sdk: flutter
-#   mockito: ^5.0.16
-#   flutter_lints: ^2.0.0
-#   build_runner: ^2.3.3
-
-# flutter:
-#   uses-material-design: true
-
-#   assets:
-#     - assets/icons/gabrieltour-logo-2023.png
-#     - assets/icons/navbar/calendar_icon.svg
-#     - assets/icons/navbar/message_icon.svg
-#     - assets/icons/navbar/my_trip_icon.svg
-#     - assets/icons/navbar/profile_icon.svg
-#     - assets/icons/navbar/search_trip_icon.svg
-#     - assets/icons/tee_time.jpeg
-#     - assets/icons/hotel.jpg
-
-
 name: gabriel_tour_app
 description: "A new Flutter project."
 publish_to: 'none'

@@ -23,7 +23,6 @@ void main() {
         quantity: 2,
       ),
     ];
-
     // Act
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
@@ -31,17 +30,15 @@ void main() {
       ),
     ));
 
-    await tester.pumpAndSettle(); // Ensure all UI updates are completed
+    await tester.pumpAndSettle();
 
     // Assert: Verify the app bar title
     expect(find.text('Doplnkové služby'), findsOneWidget);
-
     // Assert: Verify the details of the first service
     expect(find.text('Spa Package'), findsOneWidget);
     expect(find.text('200.00 EUR'), findsOneWidget);
     expect(find.text('x1'), findsOneWidget);
-
-    // Assert: Verify the details of the second service
+    // Asert: Verify the details of the second service
     expect(find.text('City Tour'), findsOneWidget);
     expect(find.text('50.00 EUR'), findsOneWidget);
     expect(find.text('x2'), findsOneWidget);

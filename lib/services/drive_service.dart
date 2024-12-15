@@ -8,10 +8,11 @@ class DriveService {
 
   DriveService(this._jwtService);
 
-  Future<List<DriveDTO>> getDrivesForCurrentWeek() async {
+  // Fetch all untracked drives
+  Future<List<DriveDTO>> getAllUntrackedDrives() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/drives/current-week'),
+      Uri.parse('http://localhost:9090/api/drives/upcoming'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -20,36 +21,97 @@ class DriveService {
 
     if (response.statusCode == 200) {
       List<dynamic> body = json.decode(response.body);
-      return body.map((dynamic item) => DriveDTO.fromJson(item)).toList();
+      return body.map((item) => DriveDTO.fromJson(item)).toList();
+    } else if (response.statusCode == 403) {
+      throw Exception('Access denied. Ensure the user has the correct roles.');
     } else {
-      throw Exception('Failed to load drives for the current week');
+      throw Exception('Failed to load untracked drives');
     }
   }
 
-  Future<DriveDTO> editDrive({
-    required int driveId,
-    required DateTime pickupTime,
-    required DateTime dropoffTime,
-    required int driverId,
-  }) async {
+  // Create a new drive
+  Future<DriveDTO> createDrive(DriveDTO drive) async {
     final token = await _jwtService.getToken();
-    final response = await http.put(
-      Uri.parse('http://localhost:9090/api/drives/$driveId/edit'),
+    final response = await http.post(
+      Uri.parse('http://localhost:9090/api/drives'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'pickupTime': pickupTime.toIso8601String(),
-        'dropoffTime': dropoffTime.toIso8601String(),
-        'driver': driverId,
-      }),
+      body: json.encode(drive.toJson()),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Map<String, dynamic> body = json.decode(response.body);
+      return DriveDTO.fromJson(body);
+    } else if (response.statusCode == 403) {
+      throw Exception('Access denied. Ensure the user has the correct roles.');
+    } else {
+      throw Exception('Failed to create a new drive');
+    }
+  }
+
+  // Update an existing drive
+  Future<DriveDTO> updateDrive(int driveId, DriveDTO drive) async {
+    final token = await _jwtService.getToken();
+    final response = await http.put(
+      Uri.parse('http://localhost:9090/api/drives/$driveId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(drive.toJson()),
     );
 
     if (response.statusCode == 200) {
-      return DriveDTO.fromJson(json.decode(response.body));
+      Map<String, dynamic> body = json.decode(response.body);
+      return DriveDTO.fromJson(body);
+    } else if (response.statusCode == 403) {
+      throw Exception('Access denied. Ensure the user has the correct roles.');
     } else {
-      throw Exception('Failed to edit drive');
+      throw Exception('Failed to update the drive');
+    }
+  }
+
+  // Delete a drive
+  Future<void> deleteDrive(int driveId) async {
+    final token = await _jwtService.getToken();
+    final response = await http.delete(
+      Uri.parse('http://localhost:9090/api/drives/$driveId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      if (response.statusCode == 403) {
+        throw Exception(
+            'Access denied. Ensure the user has the correct roles.');
+      } else {
+        throw Exception('Failed to delete the drive');
+      }
+    }
+  }
+
+  // Fetch all drives
+  Future<List<DriveDTO>> getAllDrives() async {
+    final token = await _jwtService.getToken();
+    final response = await http.get(
+      Uri.parse('http://localhost:9090/api/drives/all'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = json.decode(response.body);
+      return body.map((item) => DriveDTO.fromJson(item)).toList();
+    } else if (response.statusCode == 403) {
+      throw Exception('Access denied. Ensure the user has the correct roles.');
+    } else {
+      throw Exception('Failed to fetch all drives');
     }
   }
 }

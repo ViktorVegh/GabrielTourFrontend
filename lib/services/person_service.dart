@@ -60,4 +60,41 @@ class PersonService {
       return null;
     }
   }
+
+  Future<PersonDTO?> getPersonByProfisId(int profisId) async {
+    final token = await _jwtService.getToken();
+    final response = await http.get(
+      Uri.parse('http://localhost:9090/api/person/profis/$profisId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return PersonDTO.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 404) {
+      return null; // Not found
+    } else {
+      throw Exception('Failed to load person by profis ID');
+    }
+  }
+
+  Future<List<PersonDTO>> getAllDrivers() async {
+    final token = await _jwtService.getToken();
+    final response = await http.get(
+      Uri.parse('http://localhost:9090/api/person/all/drivers'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = json.decode(response.body);
+      return body.map((dynamic item) => PersonDTO.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load drivers');
+    }
+  }
 }
