@@ -31,12 +31,14 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   final TextEditingController _juniorsController = TextEditingController();
   final TextEditingController _holesController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _golfCourseCreateController = TextEditingController();
 
   List<int> userIds = [];
   bool isGreen = false;
   bool needTransport = false;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  int? _selectedHoles; 
 
   @override
   void initState() {
@@ -64,6 +66,38 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
       }
     }
   }
+  Future<void> _createGolfCourse() async {
+  final name = _golfCourseCreateController.text;
+
+  if (name.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Please enter a golf course name")),
+    );
+    return;
+  }
+
+  try {
+    final GolfCourseDTO? createdGolfCourse =
+        await _teeTimeService.createGolfCourse(name);
+
+    if (createdGolfCourse != null) {
+      setState(() {
+        _golfCourseIdController.text = createdGolfCourse.id.toString();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Golf course created: ${createdGolfCourse.name}")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to create golf course")),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error creating golf course")),
+    );
+  }
+}
 
   Future<void> _searchGolfCourseByName() async {
     final name = _golfCourseSearchController.text;
@@ -124,6 +158,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   }
 
   Future<void> _createTeeTime() async {
+    print(">>> _createTeeTime triggered <<<");
     if (_selectedDate == null || _selectedTime == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -141,20 +176,31 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
         _selectedTime!.hour,
         _selectedTime!.minute,
       );
-
+    
       final TeeTimeRequestDTO request = TeeTimeRequestDTO(
         golfCourseId: int.parse(_golfCourseIdController.text),
         teeTime: teeTime,
         groupSize: int.parse(_groupSizeController.text),
-        userIds: userIds,
+        userIds: [9388],
         green: isGreen,
-        holes: int.parse(_holesController.text),
+        holes: 9,
         adults: int.parse(_adultsController.text),
         juniors: int.parse(_juniorsController.text),
         transport: needTransport,
         note: _noteController.text,
       );
-
+        print("Creating Tee Time with:");
+        print("Golf Course ID: ${_golfCourseIdController.text}");
+        print("Group Size: ${_groupSizeController.text}");
+        print("Adults: ${_adultsController.text}");
+        print("Juniors: ${_juniorsController.text}");
+        print("Holes: ${request.holes}");
+        print("Green: $isGreen");
+        print("Need Transport: $needTransport");
+        print("Date: ${_selectedDate.toString()}");
+        print("Time: ${_selectedTime.toString()}");
+        print("Note: ${_noteController.text}");
+        print("userid: ${request.userIds}");
       final TeeTimeDTO? createdTeeTime =
           await _teeTimeService.createTeeTime(request);
 
@@ -195,180 +241,359 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Create Tee Time")),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Create a Tee Time",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF764706),
-                    ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: Text("Vytvor Tee Time")),
+    body: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Vyber Klienta",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'User Email',
-                      border: OutlineInputBorder(),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Klient email',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                          labelStyle: TextStyle(fontSize: 14),
+                        ),
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
+                    SizedBox(width: 10),
+                    ElevatedButton(
                     onPressed: _searchUserByEmail,
-                    child: Text("Search User by Email"),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _golfCourseSearchController,
-                    decoration: InputDecoration(
-                      labelText: 'Search Golf Course by Name',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _searchGolfCourseByName,
-                    child: Text("Search Golf Course"),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: _golfCourseIdController,
-                    decoration: InputDecoration(
-                      labelText: 'Golf Course ID',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _groupSizeController,
-                    decoration: InputDecoration(
-                      labelText: 'Group Size',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _dateController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'Date (yyyy-MM-dd)',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.calendar_today),
-                        onPressed: _pickDate,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.brown, // Brown background color
+                      foregroundColor: Colors.white, // White text color
+                      minimumSize: Size(0, 50), // Match input field height
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0), // Rounded corners
                       ),
-                      border: OutlineInputBorder(),
+                    ),
+                    child: Text(
+                      "Vyhladaj",
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _timeController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'Time (HH:mm)',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.access_time),
-                        onPressed: _pickTime,
+                  ],
+                ),
+                Divider(height: 30, thickness: 1),
+                Text(
+                  "Nastav Golfove Ihrisko",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+       SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _golfCourseSearchController,
+                decoration: InputDecoration(
+                  labelText: 'Názov ihriska',
+                  filled: true,            // Enables background fill
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                  labelStyle: TextStyle(fontSize: 14),
+                ),
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            SizedBox(width: 10),
+           ElevatedButton(
+            onPressed: _searchGolfCourseByName,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.brown, // Brown background color
+              foregroundColor: Colors.white, // White text color
+              minimumSize: Size(0, 50), // Match input field height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0), // Rounded corners
+              ),
+            ),
+            child: Text(
+              "Vyhladaj",
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+            SizedBox(width: 10), // Small gap between buttons
+            Expanded(
+              child: TextField(
+                controller: _golfCourseCreateController,
+                decoration: InputDecoration(
+                  labelText: 'Vytvor golfové ihrisko',
+                  filled: true,            // Enables background fill
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                  labelStyle: TextStyle(fontSize: 14),
+                ),
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            SizedBox(width: 10),
+                     ElevatedButton(
+            onPressed: _createGolfCourse,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.brown, // Brown background color
+              foregroundColor: Colors.white, // White text color
+              minimumSize: Size(0, 50), // Match input field height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0), // Rounded corners
+              ),
+            ),
+            child: Text(
+              "Vytvorit ",
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+          ],
+        ), 
+                Divider(height: 30, thickness: 1),
+
+                // Section 3: Fill in Tee Time Information
+                Text(
+                  "Vyplň informácie o Tee Time",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _golfCourseIdController,
+                        decoration: InputDecoration(
+                          labelText: 'ID golfového ihriska',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                          labelStyle: TextStyle(fontSize: 14),
+                        ),
+                        style: TextStyle(fontSize: 14),
                       ),
-                      border: OutlineInputBorder(),
                     ),
-                  ),
-                  SizedBox(height: 10),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _groupSizeController,
+                        decoration: InputDecoration(
+                          labelText: 'Počet ludí',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                        ),
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _dateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Dátum (yyyy-MM-dd)',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.calendar_today),
+                            onPressed: _pickDate,
+                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _timeController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'čas (HH:mm)',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.access_time),
+                            onPressed: _pickTime,
+                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _adultsController,
+                        decoration: InputDecoration(
+                          labelText: 'Počet dospelých',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0), ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _juniorsController,
+                        decoration: InputDecoration(
+                          labelText: 'Počet detí',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                        ),
+                      ),
+                    ),
+                  ],
+                ), SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        value: _selectedHoles,
+                        decoration: InputDecoration(
+                          labelText: 'Jamky',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+                          contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                        ),
+                        items: [9, 18]
+                            .map((int value) => DropdownMenuItem<int>(
+                                  value: value,
+                                  child: Text(value.toString()),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedHoles = value;
+                          });
+                        },
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                        dropdownColor: Colors.white, // Set dropdown background color
+                        menuMaxHeight: 120.0, // Set the maximum height of dropdown
+                        alignment: Alignment.centerLeft, // Align dropdown content
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _noteController,
+                        decoration: InputDecoration(
+                          labelText: 'Poznámky',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              
+                          SizedBox(height: 10),
                   Row(
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _adultsController,
-                          decoration: InputDecoration(
-                            labelText: 'Number of Adults',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+                      Switch(
+                        value: isGreen,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isGreen = value;
+                          });
+                        },
+                         activeColor: Colors.brown, // Active thumb color
+                        activeTrackColor: Colors.brown[300],
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: TextField(
-                          controller: _juniorsController,
-                          decoration: InputDecoration(
-                            labelText: 'Number of Juniors',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+                      SizedBox(width: 10), // Small space between switch and text
+                      Text(
+                        "Green",
+                        style: TextStyle(fontSize: 16),
                       ),
                     ],
                   ),
                   SizedBox(height: 10),
-                  TextField(
-                    controller: _holesController,
-                    decoration: InputDecoration(
-                      labelText: 'Holes',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _noteController,
-                    decoration: InputDecoration(
-                      labelText: 'Note',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SwitchListTile(
-                    title: Text("Green"),
-                    value: isGreen,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isGreen = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  SwitchListTile(
-                    title: Text("Need Transport"),
-                    value: needTransport,
-                    onChanged: (bool value) {
-                      setState(() {
-                        needTransport = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: _createTeeTime,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                  Row(
+                    children: [
+                      Switch(
+                        value: needTransport,
+                        onChanged: (bool value) {
+                          setState(() {
+                            needTransport = value;
+                          });
+                        },
+                         activeColor: Colors.brown, // Active thumb color
+                        activeTrackColor: Colors.brown[300],
                       ),
-                      child: Text(
-                        "Create Tee Time",
-                        style: TextStyle(fontSize: 18),
+                      SizedBox(width: 10), // Small space between switch and text
+                      Text(
+                        "Vytvor dopravu",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _createTeeTime,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      backgroundColor: Colors.brown, // Brown background color
+                      foregroundColor: Colors.white, // White text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
+                    child: Text(
+                      "Vytvoriť Tee Time",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
