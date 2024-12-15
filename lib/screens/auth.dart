@@ -35,25 +35,43 @@ class AuthScreenState extends State<AuthScreen> {
 
     if (_isLoginMode) {
       if (email.isEmpty || password.isEmpty) {
-        _showError("Email a heslo nesmú byť prázdne");
+        _showError("Email and password cannot be empty");
         return;
       }
 
       try {
+        // Perform login and get the token
         final token = await widget.authService.login(
-          LoginRequest(
-            email: email,
-            password: password,
-          ),
+          LoginRequest(email: email, password: password),
         );
+
+        // Save the token
         await widget.jwtService.saveToken(token);
-        Navigator.pushReplacementNamed(context, '/userTrips');
+
+        // Decode the user role from the token
+        final String role = widget.jwtService.getRoleFromToken(token);
+
+        // Navigate based on the role
+        if (role == 'office') {
+          Navigator.pushReplacementNamed(context, '/officeDashboard');
+        } else if (role == 'user') {
+          Navigator.pushReplacementNamed(context, '/userTrips');
+        } else if (role == 'tourGuide') {
+          Navigator.pushReplacementNamed(context, '/tourGuideTrips');
+        } else if (role == 'driver') {
+          Navigator.pushReplacementNamed(context, '/driverCalendar');
+        } else if (role == 'drivermanager') {
+          Navigator.pushReplacementNamed(context, '/manageCalendar');
+        } else {
+          _showError("Unknown role. Please contact support.");
+        }
       } catch (error) {
-        _showError("Prihlásenie zlyhalo: ${error.toString()}");
+        _showError("Login failed: ${error.toString()}");
       }
     } else {
+      // Reset password logic
       if (email.isEmpty) {
-        _showError("Zadajte email, ktorý používate v Gabriel Tour.");
+        _showError("Enter the email you use for Gabriel Tour.");
         return;
       }
 
@@ -62,12 +80,12 @@ class AuthScreenState extends State<AuthScreen> {
 
         if (responseMessage ==
             "Password reset link has been sent to your email.") {
-          _showSuccess("Odkaz na obnovenie hesla bol odoslaný na váš email.");
+          _showSuccess("Password reset link sent to your email.");
         } else {
-          _showError("Email nebol nájdený.");
+          _showError("Email not found.");
         }
       } catch (e) {
-        _showError("Chyba: Nepodarilo sa odoslať email na vytvorenie hesla.");
+        _showError("Error: Unable to send password reset email.");
       }
     }
   }

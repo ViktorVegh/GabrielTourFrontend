@@ -5,6 +5,7 @@ class TeeTime {
   final List<int> userIds;
   final int golfCourseId;
   final bool green;
+  final bool transport;
   final int holes;
   final int adults;
   final int juniors;
@@ -17,6 +18,7 @@ class TeeTime {
     required this.userIds,
     required this.golfCourseId,
     required this.green,
+    required this.transport,
     required this.holes,
     required this.adults,
     required this.juniors,
@@ -31,6 +33,7 @@ class TeeTime {
       userIds: List<int>.from(json['userIds']),
       golfCourseId: json['golfCourseId'],
       green: json['green'],
+      transport: json['transport'],
       holes: json['holes'],
       adults: json['adults'],
       juniors: json['juniors'],
@@ -46,6 +49,7 @@ class TeeTime {
       'userIds': userIds,
       'golfCourseId': golfCourseId,
       'green': green,
+      'transport': transport,
       'holes': holes,
       'adults': adults,
       'juniors': juniors,

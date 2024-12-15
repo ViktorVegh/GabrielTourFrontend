@@ -1,57 +1,247 @@
 import 'package:flutter/material.dart';
+import 'package:gabriel_tour_app/dtos/drives_calendar_dto.dart';
 import 'package:gabriel_tour_app/dtos/drive_dto.dart';
-import 'package:gabriel_tour_app/services/drive_service.dart';
+import 'package:gabriel_tour_app/services/drives_schedule_service.dart';
+import 'package:gabriel_tour_app/services/person_service.dart';
+import 'package:gabriel_tour_app/widgets/calendar_widget.dart';
+import 'package:gabriel_tour_app/widgets/drive_details_widget.dart';
+import 'package:gabriel_tour_app/widgets/drive_item_widget.dart'; // Import DriveItem
+import 'package:intl/intl.dart';
+import 'package:gabriel_tour_app/services/jwt_service.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final DriveService driveService;
+  final DrivesScheduleService drivesScheduleService;
+  final PersonService personService;
+  final JwtService jwtService;
 
-  CalendarScreen({required this.driveService});
+  CalendarScreen({
+    required this.drivesScheduleService,
+    required this.personService,
+    required this.jwtService,
+  });
 
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  late Future<List<DriveDTO>> drives;
+  late Future<DrivesCalendarDTO> calendarData;
+  DateTime? selectedDate;
+  DateTime visibleMonth = DateTime.now();
+  String? userRole; // Tracks the currently visible month
 
   @override
   void initState() {
     super.initState();
-    drives = widget.driveService.getDrivesForCurrentWeek();
+    calendarData = widget.drivesScheduleService.getMonthlyCalendar();
+    debugPrint('Initialized CalendarScreen with future data fetching.');
+    _fetchUserRole();
+  }
+
+  Future<void> _fetchUserRole() async {
+    try {
+      final token = await widget.jwtService.getToken();
+      if (token != null) {
+        final role = widget.jwtService.getRoleFromToken(token);
+        setState(() {
+          userRole = role; // Update the user role
+        });
+      } else {
+        setState(() {
+          userRole = "unknown"; // Default role if token is null
+        });
+        debugPrint("Token is null. Unable to determine user role.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user role: $e");
+      setState(() {
+        userRole = "unknown"; // Default role if unable to fetch
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Weekly Schedule')),
-      body: FutureBuilder<List<DriveDTO>>(
-        future: drives,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No drives available.'));
-          } else {
-            final driveList = snapshot.data!;
-            return ListView.builder(
-              itemCount: driveList.length,
-              itemBuilder: (context, index) {
-                final drive = driveList[index];
-                return ListTile(
-                  title:
-                      Text('${drive.departurePlace} → ${drive.arrivalPlace}'),
-                  subtitle: Text('${drive.date} - ${drive.pickupTime}'),
-                  onTap: () {
-                    // Navigate to edit screen
-                  },
-                );
-              },
-            );
-          }
-        },
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 242, 242, 242),
+        title: Text(
+          'Drives Calendar',
+          style: TextStyle(
+            color: const Color.fromARGB(255, 0, 0, 0),
+            fontSize: screenWidth * 0.05,
+          ),
+        ),
       ),
+      backgroundColor: const Color.fromARGB(255, 242, 242, 242),
+      body: userRole == null
+          ? Center(
+              child: Text(
+                'User role is not available.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            )
+          : FutureBuilder<DrivesCalendarDTO>(
+              future: calendarData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  debugPrint('Fetching calendar data...');
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  debugPrint('Error fetching calendar data: ${snapshot.error}');
+                  return Center(
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: TextStyle(fontSize: screenWidth * 0.045),
+                    ),
+                  );
+                } else if (!snapshot.hasData) {
+                  debugPrint('No calendar data available.');
+                  return Center(
+                    child: Text(
+                      'No data available.',
+                      style: TextStyle(fontSize: screenWidth * 0.045),
+                    ),
+                  );
+                } else {
+                  final calendar = snapshot.data!;
+                  final drivesByDate = _groupDrivesByDate(calendar.drives);
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: CalendarWidget(
+                          onDateSelected: (date) {
+                            debugPrint('Date selected: $date');
+                            setState(() {
+                              selectedDate = date;
+                              visibleMonth = DateTime(date.year, date.month);
+                            });
+                          },
+                          monthStartDate:
+                              DateTime.parse(calendar.monthStartDate),
+                          monthEndDate: DateTime.parse(calendar.monthEndDate),
+                          drives: _createEventMap(calendar.drives),
+                          userRole: userRole!,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(
+                                'Drives in ${DateFormat.MMMM().format(visibleMonth)}',
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.05,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: drivesByDate.keys.length,
+                                itemBuilder: (context, index) {
+                                  final date =
+                                      drivesByDate.keys.elementAt(index);
+                                  final drives = drivesByDate[date]!;
+
+                                  // Show drives only in the visible month
+                                  if (date.month != visibleMonth.month) {
+                                    return SizedBox.shrink();
+                                  }
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          '${DateFormat.EEEE().format(date)}, ${date.day} ${DateFormat.MMMM().format(date)}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      ...drives.map((drive) {
+                                        return DriveItem(
+                                          drive: drive,
+                                          onTap: () {
+                                            debugPrint('Drive tapped: $drive');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DriveDetailsWidget(
+                                                  drive: drive,
+                                                  personService:
+                                                      widget.personService,
+                                                  onClose: () {
+                                                    debugPrint(
+                                                        'DriveDetailsWidget closed.');
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }).toList(),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
     );
+  }
+
+  // Group drives by their date
+  Map<DateTime, List<DriveDTO>> _groupDrivesByDate(List<DriveDTO> drives) {
+    final Map<DateTime, List<DriveDTO>> grouped = {};
+    for (var drive in drives) {
+      final date = DateTime.parse(drive.date);
+      final key = DateTime(date.year, date.month, date.day);
+      if (!grouped.containsKey(key)) {
+        grouped[key] = [];
+      }
+      grouped[key]!.add(drive);
+    }
+    debugPrint('Grouped drives by date: $grouped');
+    return grouped;
+  }
+
+  // Create event map for the calendar
+  Map<DateTime, List<DriveDTO>> _createEventMap(List<DriveDTO> drives) {
+    final Map<DateTime, List<DriveDTO>> eventMap = {};
+    for (var drive in drives) {
+      final date = DateTime.parse(drive.date);
+      final key = DateTime(date.year, date.month, date.day);
+      if (!eventMap.containsKey(key)) {
+        eventMap[key] = [];
+      }
+      eventMap[key]!.add(drive);
+    }
+    debugPrint('Created event map for the calendar: $eventMap');
+    return eventMap;
   }
 }

@@ -19,17 +19,13 @@ void main() {
     late TeeTimeService mockTeeTimeService;
 
     setUp(() {
-      // Initialize mocks
       mockOrderService = MockOrderService();
 
-      // Inject the mocked JwtService into TeeTimeService
       mockTeeTimeService = MockTeeTimeService();
 
-      // Default mock behavior for OrderService
       when(mockOrderService.getOrderDetailsForUser())
           .thenAnswer((_) async => null);
 
-      // Mock JwtService behavior
       when(mockTeeTimeService.getTeeTimesForUser())
           .thenAnswer((_) async => null);
     });

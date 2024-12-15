@@ -1,22 +1,24 @@
 class DriveDTO {
   final int id;
   final String date;
-  final String pickupTime;
-  final String dropoffTime;
+  final String? pickupTime;
+  final String? dropoffTime;
   final String? customReason;
-  final int driverId;
+  final int? driverId;
   final String departurePlace;
   final String arrivalPlace;
+  final List<int> userIds; // Made non-nullable
 
   DriveDTO({
     required this.id,
     required this.date,
-    required this.pickupTime,
-    required this.dropoffTime,
+    this.pickupTime,
+    this.dropoffTime,
     this.customReason,
-    required this.driverId,
+    this.driverId,
     required this.departurePlace,
     required this.arrivalPlace,
+    required this.userIds, // Ensure it's required
   });
 
   factory DriveDTO.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,44 @@ class DriveDTO {
       driverId: json['driverId'],
       departurePlace: json['departurePlace'],
       arrivalPlace: json['arrivalPlace'],
+      userIds: (json['userIds'] as List<dynamic>).map((e) => e as int).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'date': date,
+      'pickupTime': pickupTime,
+      'dropoffTime': dropoffTime,
+      'customReason': customReason,
+      'driverId': driverId,
+      'departurePlace': departurePlace,
+      'arrivalPlace': arrivalPlace,
+      'userIds': userIds,
+    };
+  }
+
+  DriveDTO copyWith({
+    String? departurePlace,
+    String? arrivalPlace,
+    String? customReason,
+    String? date,
+    String? pickupTime,
+    String? dropoffTime,
+    int? driverId,
+    List<int>? userIds, // Allow overriding userIds in copyWith
+  }) {
+    return DriveDTO(
+      id: id,
+      departurePlace: departurePlace ?? this.departurePlace,
+      arrivalPlace: arrivalPlace ?? this.arrivalPlace,
+      customReason: customReason ?? this.customReason,
+      date: date ?? this.date,
+      pickupTime: pickupTime ?? this.pickupTime,
+      dropoffTime: dropoffTime ?? this.dropoffTime,
+      driverId: driverId ?? this.driverId,
+      userIds: userIds ?? this.userIds,
     );
   }
 }
