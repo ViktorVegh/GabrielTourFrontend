@@ -189,18 +189,18 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
         transport: needTransport,
         note: _noteController.text,
       );
-      print("Creating Tee Time with:");
-    print("Golf Course ID: ${_golfCourseIdController.text}");
-print("Group Size: ${_groupSizeController.text}");
-print("Adults: ${_adultsController.text}");
-print("Juniors: ${_juniorsController.text}");
-print("Holes: ${request.holes}");
-print("Green: $isGreen");
-print("Need Transport: $needTransport");
-print("Date: ${_selectedDate.toString()}");
-print("Time: ${_selectedTime.toString()}");
-print("Note: ${_noteController.text}");
-print("userid: ${request.userIds}");
+        print("Creating Tee Time with:");
+        print("Golf Course ID: ${_golfCourseIdController.text}");
+        print("Group Size: ${_groupSizeController.text}");
+        print("Adults: ${_adultsController.text}");
+        print("Juniors: ${_juniorsController.text}");
+        print("Holes: ${request.holes}");
+        print("Green: $isGreen");
+        print("Need Transport: $needTransport");
+        print("Date: ${_selectedDate.toString()}");
+        print("Time: ${_selectedTime.toString()}");
+        print("Note: ${_noteController.text}");
+        print("userid: ${request.userIds}");
       final TeeTimeDTO? createdTeeTime =
           await _teeTimeService.createTeeTime(request);
 
@@ -528,42 +528,46 @@ Widget build(BuildContext context) {
                   ],
                 ),
               
-         SizedBox(height: 10),
-Row(
-  children: [
-    Switch(
-      value: isGreen,
-      onChanged: (bool value) {
-        setState(() {
-          isGreen = value;
-        });
-      },
-    ),
-    SizedBox(width: 10), // Small space between switch and text
-    Text(
-      "Green",
-      style: TextStyle(fontSize: 16),
-    ),
-  ],
-),
-SizedBox(height: 10),
-Row(
-  children: [
-    Switch(
-      value: needTransport,
-      onChanged: (bool value) {
-        setState(() {
-          needTransport = value;
-        });
-      },
-    ),
-    SizedBox(width: 10), // Small space between switch and text
-    Text(
-      "Need Transport",
-      style: TextStyle(fontSize: 16),
-    ),
-  ],
-),
+                          SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Switch(
+                        value: isGreen,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isGreen = value;
+                          });
+                        },
+                         activeColor: Colors.brown, // Active thumb color
+                        activeTrackColor: Colors.brown[300],
+                      ),
+                      SizedBox(width: 10), // Small space between switch and text
+                      Text(
+                        "Green",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Switch(
+                        value: needTransport,
+                        onChanged: (bool value) {
+                          setState(() {
+                            needTransport = value;
+                          });
+                        },
+                         activeColor: Colors.brown, // Active thumb color
+                        activeTrackColor: Colors.brown[300],
+                      ),
+                      SizedBox(width: 10), // Small space between switch and text
+                      Text(
+                        "Need Transport",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
 
                 SizedBox(height: 20),
                 Center(

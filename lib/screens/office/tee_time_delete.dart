@@ -204,11 +204,25 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _searchTeeTimeByEmail,
-                    child: Text("Fetch Tee Times"),
+                  
+                   SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                     onPressed: _searchTeeTimeByEmail,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      backgroundColor: Colors.brown, // Brown background color
+                      foregroundColor: Colors.white, // White text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text(
+                      "Vyhladaj Tee Time",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
+                ),
                   SizedBox(height: 20),
                   Text(
                     "Tee Times",
@@ -239,22 +253,25 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                           },
                         )
                       : Text("No tee times available."),
-                  SizedBox(height: 20),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: _selectedTeeTimeId != null ? _deleteTeeTime : null,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        "Vymaz Tee Time",
-                        style: TextStyle(fontSize: 18),
+                       SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                     onPressed: _selectedTeeTimeId != null ? _deleteTeeTime : null,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      backgroundColor: Colors.brown, // Brown background color
+                      foregroundColor: Colors.white, // White text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
+                    child: Text(
+                      "Vymaz Tee Time",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
+                ),
+                 
                 ],
               ),
             ),
