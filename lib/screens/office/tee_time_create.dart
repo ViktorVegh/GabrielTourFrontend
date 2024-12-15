@@ -38,6 +38,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   bool needTransport = false;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  int? _selectedHoles; 
 
   @override
   void initState() {
@@ -157,6 +158,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   }
 
   Future<void> _createTeeTime() async {
+    print(">>> _createTeeTime triggered <<<");
     if (_selectedDate == null || _selectedTime == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -174,20 +176,31 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
         _selectedTime!.hour,
         _selectedTime!.minute,
       );
-
+    
       final TeeTimeRequestDTO request = TeeTimeRequestDTO(
         golfCourseId: int.parse(_golfCourseIdController.text),
         teeTime: teeTime,
         groupSize: int.parse(_groupSizeController.text),
-        userIds: userIds,
+        userIds: [9388],
         green: isGreen,
-        holes: int.parse(_holesController.text),
+        holes: 9,
         adults: int.parse(_adultsController.text),
         juniors: int.parse(_juniorsController.text),
         transport: needTransport,
         note: _noteController.text,
       );
-
+      print("Creating Tee Time with:");
+    print("Golf Course ID: ${_golfCourseIdController.text}");
+print("Group Size: ${_groupSizeController.text}");
+print("Adults: ${_adultsController.text}");
+print("Juniors: ${_juniorsController.text}");
+print("Holes: ${request.holes}");
+print("Green: $isGreen");
+print("Need Transport: $needTransport");
+print("Date: ${_selectedDate.toString()}");
+print("Time: ${_selectedTime.toString()}");
+print("Note: ${_noteController.text}");
+print("userid: ${request.userIds}");
       final TeeTimeDTO? createdTeeTime =
           await _teeTimeService.createTeeTime(request);
 
@@ -245,11 +258,11 @@ Widget build(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Create a Tee Time",
+                  "Select User",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF764706),
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -260,7 +273,9 @@ Widget build(BuildContext context) {
                         controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'User Email',
-                          border: OutlineInputBorder(),
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
                           labelStyle: TextStyle(fontSize: 14),
@@ -270,10 +285,29 @@ Widget build(BuildContext context) {
                     ),
                     SizedBox(width: 10),
                     ElevatedButton(
-                      onPressed: _searchUserByEmail,
-                      child: Text("Search User"),
+                    onPressed: _searchUserByEmail,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.brown, // Brown background color
+                      foregroundColor: Colors.white, // White text color
+                      minimumSize: Size(0, 50), // Match input field height
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0), // Rounded corners
+                      ),
                     ),
+                    child: Text(
+                      "Search User",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
                   ],
+                ),
+                Divider(height: 30, thickness: 1),
+                Text(
+                  "Setup Golf Course",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
        SizedBox(height: 20),
         Row(
@@ -283,7 +317,9 @@ Widget build(BuildContext context) {
                 controller: _golfCourseSearchController,
                 decoration: InputDecoration(
                   labelText: 'Search Golf Course by Name',
-                  border: OutlineInputBorder(),
+                  filled: true,            // Enables background fill
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                   contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
                   labelStyle: TextStyle(fontSize: 14),
                 ),
@@ -291,17 +327,30 @@ Widget build(BuildContext context) {
               ),
             ),
             SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: _searchGolfCourseByName,
-              child: Text("Search"),
+           ElevatedButton(
+            onPressed: _searchGolfCourseByName,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.brown, // Brown background color
+              foregroundColor: Colors.white, // White text color
+              minimumSize: Size(0, 50), // Match input field height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0), // Rounded corners
+              ),
             ),
+            child: Text(
+              "Search ",
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
             SizedBox(width: 10), // Small gap between buttons
             Expanded(
               child: TextField(
                 controller: _golfCourseCreateController,
                 decoration: InputDecoration(
                   labelText: 'Create Golf Course',
-                  border: OutlineInputBorder(),
+                  filled: true,            // Enables background fill
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                   contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
                   labelStyle: TextStyle(fontSize: 14),
                 ),
@@ -309,12 +358,33 @@ Widget build(BuildContext context) {
               ),
             ),
             SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: _createGolfCourse,
-              child: Text("Create"),
+                     ElevatedButton(
+            onPressed: _createGolfCourse,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.brown, // Brown background color
+              foregroundColor: Colors.white, // White text color
+              minimumSize: Size(0, 50), // Match input field height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0), // Rounded corners
+              ),
             ),
+            child: Text(
+              "Create ",
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
           ],
-        ),
+        ), 
+                Divider(height: 30, thickness: 1),
+
+                // Section 3: Fill in Tee Time Information
+                Text(
+                  "Fill in Tee Time Information",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 SizedBox(height: 10),
                 Row(
                   children: [
@@ -323,7 +393,9 @@ Widget build(BuildContext context) {
                         controller: _golfCourseIdController,
                         decoration: InputDecoration(
                           labelText: 'Golf Course ID',
-                          border: OutlineInputBorder(),
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
                           labelStyle: TextStyle(fontSize: 14),
@@ -337,7 +409,9 @@ Widget build(BuildContext context) {
                         controller: _groupSizeController,
                         decoration: InputDecoration(
                           labelText: 'Group Size',
-                          border: OutlineInputBorder(),
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                         ),
                         style: TextStyle(fontSize: 14),
                       ),
@@ -353,11 +427,13 @@ Widget build(BuildContext context) {
                         readOnly: true,
                         decoration: InputDecoration(
                           labelText: 'Date (yyyy-MM-dd)',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
                           suffixIcon: IconButton(
                             icon: Icon(Icons.calendar_today),
                             onPressed: _pickDate,
                           ),
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                         ),
                       ),
                     ),
@@ -368,11 +444,13 @@ Widget build(BuildContext context) {
                         readOnly: true,
                         decoration: InputDecoration(
                           labelText: 'Time (HH:mm)',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
                           suffixIcon: IconButton(
                             icon: Icon(Icons.access_time),
                             onPressed: _pickTime,
                           ),
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                         ),
                       ),
                     ),
@@ -386,7 +464,9 @@ Widget build(BuildContext context) {
                         controller: _adultsController,
                         decoration: InputDecoration(
                           labelText: 'Number of Adults',
-                          border: OutlineInputBorder(),
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0), ),
                         ),
                       ),
                     ),
@@ -396,55 +476,105 @@ Widget build(BuildContext context) {
                         controller: _juniorsController,
                         decoration: InputDecoration(
                           labelText: 'Number of Juniors',
-                          border: OutlineInputBorder(),
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
+                        ),
+                      ),
+                    ),
+                  ],
+                ), SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        value: _selectedHoles,
+                        decoration: InputDecoration(
+                          labelText: 'Holes',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+                          contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                        ),
+                        items: [9, 18]
+                            .map((int value) => DropdownMenuItem<int>(
+                                  value: value,
+                                  child: Text(value.toString()),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedHoles = value;
+                          });
+                        },
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                        dropdownColor: Colors.white, // Set dropdown background color
+                        menuMaxHeight: 120.0, // Set the maximum height of dropdown
+                        alignment: Alignment.centerLeft, // Align dropdown content
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _noteController,
+                        decoration: InputDecoration(
+                          labelText: 'Note',
+                          filled: true,            // Enables background fill
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: _holesController,
-                  decoration: InputDecoration(
-                    labelText: 'Holes',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _noteController,
-                  decoration: InputDecoration(
-                    labelText: 'Note',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 10),
-                SwitchListTile(
-                  title: Text("Green"),
-                  value: isGreen,
-                  onChanged: (bool value) {
-                    setState(() {
-                      isGreen = value;
-                    });
-                  },
-                ),
-                SwitchListTile(
-                  title: Text("Need Transport"),
-                  value: needTransport,
-                  onChanged: (bool value) {
-                    setState(() {
-                      needTransport = value;
-                    });
-                  },
-                ),
+              
+         SizedBox(height: 10),
+Row(
+  children: [
+    Switch(
+      value: isGreen,
+      onChanged: (bool value) {
+        setState(() {
+          isGreen = value;
+        });
+      },
+    ),
+    SizedBox(width: 10), // Small space between switch and text
+    Text(
+      "Green",
+      style: TextStyle(fontSize: 16),
+    ),
+  ],
+),
+SizedBox(height: 10),
+Row(
+  children: [
+    Switch(
+      value: needTransport,
+      onChanged: (bool value) {
+        setState(() {
+          needTransport = value;
+        });
+      },
+    ),
+    SizedBox(width: 10), // Small space between switch and text
+    Text(
+      "Need Transport",
+      style: TextStyle(fontSize: 16),
+    ),
+  ],
+),
+
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
                     onPressed: _createTeeTime,
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      backgroundColor: Colors.brown, // Brown background color
+                      foregroundColor: Colors.white, // White text color
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     child: Text(
