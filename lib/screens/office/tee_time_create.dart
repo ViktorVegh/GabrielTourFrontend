@@ -243,7 +243,7 @@ class _CreateTeeTimeScreenState extends State<CreateTeeTimeScreen> {
   @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(title: Text("Create Tee Time")),
+    appBar: AppBar(title: Text("Vytvor Tee Time")),
     body: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -258,7 +258,7 @@ Widget build(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Select User",
+                  "Vyber Klienta",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -272,7 +272,7 @@ Widget build(BuildContext context) {
                       child: TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                          labelText: 'User Email',
+                          labelText: 'Klient email',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -295,7 +295,7 @@ Widget build(BuildContext context) {
                       ),
                     ),
                     child: Text(
-                      "Search User",
+                      "Vyhladaj",
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
@@ -303,7 +303,7 @@ Widget build(BuildContext context) {
                 ),
                 Divider(height: 30, thickness: 1),
                 Text(
-                  "Setup Golf Course",
+                  "Nastav Golfove Ihrisko",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -316,7 +316,7 @@ Widget build(BuildContext context) {
               child: TextField(
                 controller: _golfCourseSearchController,
                 decoration: InputDecoration(
-                  labelText: 'Search Golf Course by Name',
+                  labelText: 'Názov ihriska',
                   filled: true,            // Enables background fill
                   fillColor: Colors.grey[200],
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -338,7 +338,7 @@ Widget build(BuildContext context) {
               ),
             ),
             child: Text(
-              "Search ",
+              "Vyhladaj",
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -347,7 +347,7 @@ Widget build(BuildContext context) {
               child: TextField(
                 controller: _golfCourseCreateController,
                 decoration: InputDecoration(
-                  labelText: 'Create Golf Course',
+                  labelText: 'Vytvor golfové ihrisko',
                   filled: true,            // Enables background fill
                   fillColor: Colors.grey[200],
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -369,7 +369,7 @@ Widget build(BuildContext context) {
               ),
             ),
             child: Text(
-              "Create ",
+              "Vytvorit ",
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -379,7 +379,7 @@ Widget build(BuildContext context) {
 
                 // Section 3: Fill in Tee Time Information
                 Text(
-                  "Fill in Tee Time Information",
+                  "Vyplň informácie o Tee Time",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -392,7 +392,7 @@ Widget build(BuildContext context) {
                       child: TextField(
                         controller: _golfCourseIdController,
                         decoration: InputDecoration(
-                          labelText: 'Golf Course ID',
+                          labelText: 'ID golfového ihriska',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -408,7 +408,7 @@ Widget build(BuildContext context) {
                       child: TextField(
                         controller: _groupSizeController,
                         decoration: InputDecoration(
-                          labelText: 'Group Size',
+                          labelText: 'Počet ludí',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -426,7 +426,7 @@ Widget build(BuildContext context) {
                         controller: _dateController,
                         readOnly: true,
                         decoration: InputDecoration(
-                          labelText: 'Date (yyyy-MM-dd)',
+                          labelText: 'Dátum (yyyy-MM-dd)',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           suffixIcon: IconButton(
@@ -443,7 +443,7 @@ Widget build(BuildContext context) {
                         controller: _timeController,
                         readOnly: true,
                         decoration: InputDecoration(
-                          labelText: 'Time (HH:mm)',
+                          labelText: 'čas (HH:mm)',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           suffixIcon: IconButton(
@@ -463,7 +463,7 @@ Widget build(BuildContext context) {
                       child: TextField(
                         controller: _adultsController,
                         decoration: InputDecoration(
-                          labelText: 'Number of Adults',
+                          labelText: 'Počet dospelých',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0), ),
@@ -475,7 +475,7 @@ Widget build(BuildContext context) {
                       child: TextField(
                         controller: _juniorsController,
                         decoration: InputDecoration(
-                          labelText: 'Number of Juniors',
+                          labelText: 'Počet detí',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -490,7 +490,7 @@ Widget build(BuildContext context) {
                       child: DropdownButtonFormField<int>(
                         value: _selectedHoles,
                         decoration: InputDecoration(
-                          labelText: 'Holes',
+                          labelText: 'Jamky',
                           filled: true,
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -518,7 +518,7 @@ Widget build(BuildContext context) {
                       child: TextField(
                         controller: _noteController,
                         decoration: InputDecoration(
-                          labelText: 'Note',
+                          labelText: 'Poznámky',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -563,7 +563,7 @@ Widget build(BuildContext context) {
                       ),
                       SizedBox(width: 10), // Small space between switch and text
                       Text(
-                        "Need Transport",
+                        "Vytvor dopravu",
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -582,7 +582,7 @@ Widget build(BuildContext context) {
                       ),
                     ),
                     child: Text(
-                      "Create Tee Time",
+                      "Vytvoriť Tee Time",
                       style: TextStyle(fontSize: 18),
                     ),
                   ),

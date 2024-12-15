@@ -247,7 +247,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Edit Tee Time")),
+      appBar: AppBar(title: Text("Uprav Tee Time")),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -262,7 +262,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Edit a Tee Time",
+                    "Uprav Tee Time",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -273,7 +273,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      labelText: 'User Email',
+                      labelText: 'Klient Email',
                       border: OutlineInputBorder(),
                     ),
                   ),SizedBox(height: 20),
@@ -309,8 +309,8 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                               elevation: 2,
                               margin: EdgeInsets.symmetric(vertical: 8),
                               child: ListTile(
-                                title: Text("názov Tee Time: ${teeTime.id}"),
-                                subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
+                                title: Text("ID Tee time: ${teeTime.id}"),
+                                subtitle: Text("Dátum: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
                                 selected: _selectedTeeTimeId == teeTime.id,
                                 selectedTileColor: Colors.grey[300],
                                 onTap: () {
@@ -333,7 +333,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
         children: [
           Divider(height: 30, thickness: 1),
            Text(
-                  "Fill in Tee Time Information",
+                  "Vyplň informácie o Tee Time",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -346,7 +346,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       child: TextField(
                         controller: _golfCourseIdController,
                         decoration: InputDecoration(
-                          labelText: 'Golf Course ID',
+                          labelText: 'ID golfového ihriska',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -362,7 +362,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       child: TextField(
                         controller: _groupSizeController,
                         decoration: InputDecoration(
-                          labelText: 'Group Size',
+                          labelText: 'Počet ludí',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -380,7 +380,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                         controller: _dateController,
                         readOnly: true,
                         decoration: InputDecoration(
-                          labelText: 'Date (yyyy-MM-dd)',
+                          labelText: 'Dátum (yyyy-MM-dd)',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           suffixIcon: IconButton(
@@ -397,7 +397,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                         controller: _timeController,
                         readOnly: true,
                         decoration: InputDecoration(
-                          labelText: 'Time (HH:mm)',
+                          labelText: 'čas (HH:mm)',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           suffixIcon: IconButton(
@@ -417,7 +417,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       child: TextField(
                         controller: _adultsController,
                         decoration: InputDecoration(
-                          labelText: 'Number of Adults',
+                          labelText: 'Počet dospelých',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0), ),
@@ -429,7 +429,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       child: TextField(
                         controller: _juniorsController,
                         decoration: InputDecoration(
-                          labelText: 'Number of Juniors',
+                          labelText: 'Počet detí',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -445,7 +445,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       child: DropdownButtonFormField<int>(
                         value: _selectedHoles,
                         decoration: InputDecoration(
-                          labelText: 'Holes',
+                          labelText: 'Jamky',
                           filled: true,
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -473,7 +473,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       child: TextField(
                         controller: _noteController,
                         decoration: InputDecoration(
-                          labelText: 'Note',
+                          labelText: 'Poznámky',
                           filled: true,            // Enables background fill
                           fillColor: Colors.grey[200],
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),),
@@ -517,7 +517,7 @@ class _EditTeeTimeScreenState extends State<EditTeeTimeScreen> {
                       ),
                       SizedBox(width: 10), // Small space between switch and text
                       Text(
-                        "Need Transport",
+                        "Vytvor dopravu",
                         style: TextStyle(fontSize: 16),
                       ),
                     ],

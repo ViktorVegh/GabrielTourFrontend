@@ -40,51 +40,42 @@ class NavigationPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[200],
-      child: ListView(
-        children: [
-          ListTile(
-            title: Text('Trips'),
+      child: ListView.separated(
+        itemBuilder: (context, index) {
+          // Define the tiles with explicit types
+          final List<Map<String, dynamic>> tiles = [
+            {'title': 'Trips', 'screen': null},
+            {'title': 'Vytvorit Tee Time', 'screen': CreateTeeTimeScreen()},
+            {'title': 'Upravit Tee Time', 'screen': EditTeeTimeScreen()},
+            {'title': 'Vymazat Tee Time', 'screen': DeleteTeeTimeScreen()},
+          ];
+
+          return ListTile(
+            title: Text(
+              tiles[index]['title'] as String, // Cast 'title' to String
+              style: TextStyle(
+                fontWeight: FontWeight.bold, // Make the text bold
+                fontSize: 16,
+              ),
+            ),
             onTap: () {
-              // Navigate to trips (if functionality is added later)
+              final screen = tiles[index]['screen'];
+              if (screen != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => screen as Widget, // Cast 'screen' to Widget
+                  ),
+                );
+              }
             },
-          ),
-          ListTile(
-            title: Text('Vytvorit Tee Time'),
-            onTap: () {
-              // Push the CreateTeeTimeScreen directly
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateTeeTimeScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: Text('Upravit Tee Time'),
-            onTap: () {
-              // Push the CreateTeeTimeScreen directly
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditTeeTimeScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: Text('Vymazat Tee Time'),
-            onTap: () {
-              // Push the CreateTeeTimeScreen directly
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DeleteTeeTimeScreen(),
-                ),
-              );
-            },
-          ),
-        ],
+          );
+        },
+        separatorBuilder: (context, index) => Divider(
+          color: Colors.grey, // Add a border between tiles
+          thickness: 1, // Thickness of the border
+        ),
+        itemCount: 4,
       ),
     );
   }
@@ -93,8 +84,20 @@ class NavigationPanel extends StatelessWidget {
 class MainContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Calculate screen height
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Center(
-      child: Text(' '),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: screenHeight * 0.1), // Spacer above the logo
+          Image.asset(
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.1, // Adjust the height of the logo
+          ),
+        ],
+      ),
     );
   }
 }
