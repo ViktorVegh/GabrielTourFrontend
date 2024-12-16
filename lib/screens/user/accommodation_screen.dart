@@ -8,14 +8,15 @@ class AccommodationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     final hotel = accommodation.hotel;
 
     // Accommodation and hotel details from DTO
     final String hotelName = hotel.name;
     final int stars = hotel.stars;
-    final String region = hotel.region ?? 'Neznámy región'; // Default if null
-    final String country =
-        hotel.country ?? 'Neznáma krajina'; // Default if null
+    final String region = hotel.region ?? 'Neznámy región';
+    final String country = hotel.country ?? 'Neznáma krajina';
     final String accommodationName = accommodation.accommodationName;
     final String startDate =
         '${DateTime.parse(accommodation.startDate).day}.${DateTime.parse(accommodation.startDate).month}.${DateTime.parse(accommodation.startDate).year}';
@@ -28,15 +29,42 @@ class AccommodationScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detaily Ubytovania'),
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Padding(
+          padding: EdgeInsets.only(top: screenHeight * 0.02),
+          child: Image.asset(
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.04,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Add spacing below the app bar
+            SizedBox(height: screenHeight * 0.015),
+
+            // Brown strip with screen title
+            Container(
+              width: double.infinity,
+              color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
+              child: Text(
+                'Detaily Ubytovania',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenHeight * 0.025, // Relative font size
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
             // Hotel Image Placeholder
-            const HotelImage(
-                imageUrl: 'assets/hotel.jpg'), // Image remains static for now
+            const HotelImage(imageUrl: 'assets/icons/hotel.jpg'),
 
             // Hotel Details Section
             HotelDetails(

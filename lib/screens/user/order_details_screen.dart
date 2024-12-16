@@ -63,8 +63,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final sliderTop = screenHeight * 0.08;
-    final sliderHeight = screenHeight * 0.28;
+    final sliderTop = screenHeight * 0.06;
+    final sliderHeight = screenHeight * 0.32;
     final mainContentPadding = sliderTop + screenHeight * 0.27;
 
     return RoleSpecificNavbar(
@@ -72,180 +72,224 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       initialIndex: 1,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Detail objednávky'),
+          backgroundColor: Colors.white,
+          elevation: 1,
+          title: Padding(
+            padding: EdgeInsets.only(top: screenHeight * 0.02),
+            child: Image.asset(
+              'assets/icons/gabrieltour-logo-2023.png',
+              height: screenHeight * 0.04,
+            ),
+          ),
+          centerTitle: true,
         ),
-        body: FutureBuilder<OrderDTO?>(
-          future: _orderDetails,
-          builder: (context, orderSnapshot) {
-            if (orderSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (orderSnapshot.hasError || orderSnapshot.data == null) {
-              return const Center(child: Text('Error loading order details.'));
-            }
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Brown bar under app bar
+            SizedBox(height: screenHeight * 0.015), // Relative gap
+            Container(
+              width: double.infinity,
+              color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
+              child: Text(
+                'Moja Objednávka', // Screen title
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenHeight * 0.025, // Relative font size
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder<OrderDTO?>(
+                future: _orderDetails,
+                builder: (context, orderSnapshot) {
+                  if (orderSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (orderSnapshot.hasError ||
+                      orderSnapshot.data == null) {
+                    return const Center(
+                        child: Text('Error loading order details.'));
+                  }
 
-            final order = orderSnapshot.data!;
-            final startDate = DateTime.parse(order.startDate);
-            final endDate = DateTime.parse(order.endDate);
-            final travelDates =
-                '${startDate.day}.${startDate.month}.${startDate.year} - ${endDate.day}.${endDate.month}.${endDate.year}';
+                  final order = orderSnapshot.data!;
+                  final startDate = DateTime.parse(order.startDate);
+                  final endDate = DateTime.parse(order.endDate);
+                  final travelDates =
+                      '${startDate.day}.${startDate.month}.${startDate.year} - ${endDate.day}.${endDate.month}.${endDate.year}';
 
-            final location = order.accommodationReservations.isNotEmpty
-                ? [
-                    order.accommodationReservations[0].hotel.region,
-                    order.accommodationReservations[0].hotel.country
-                  ].where((part) => part != null).join(', ')
-                : 'Unknown';
+                  final location = order.accommodationReservations.isNotEmpty
+                      ? [
+                          order.accommodationReservations[0].hotel.region,
+                          order.accommodationReservations[0].hotel.country
+                        ].where((part) => part != null).join(', ')
+                      : 'Unknown';
 
-            final resortName = order.name;
-            final stars = order.accommodationReservations.isNotEmpty
-                ? order.accommodationReservations[0].hotel.stars
-                : 0;
+                  final resortName = order.name;
+                  final stars = order.accommodationReservations.isNotEmpty
+                      ? order.accommodationReservations[0].hotel.stars
+                      : 0;
 
-            return FutureBuilder<List<TeeTimeDTO>>(
-              future: _teeTimes,
-              builder: (context, teeTimeSnapshot) {
-                if (teeTimeSnapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (teeTimeSnapshot.hasError) {
-                  return const Center(child: Text('Error loading tee times.'));
-                }
+                  return FutureBuilder<List<TeeTimeDTO>>(
+                    future: _teeTimes,
+                    builder: (context, teeTimeSnapshot) {
+                      if (teeTimeSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (teeTimeSnapshot.hasError) {
+                        return const Center(
+                            child: Text('Error loading tee times.'));
+                      }
 
-                final teeTimes = teeTimeSnapshot.data!;
+                      final teeTimes = teeTimeSnapshot.data!;
 
-                return SingleChildScrollView(
-                  child: Stack(
-                    children: [
-                      // Hotel image
-                      Container(
-                        height: screenHeight * 0.25,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/icons/hotel.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      // Transportation slider
-                      Positioned(
-                        top: sliderTop,
-                        left: 0,
-                        right: 0,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: sliderHeight, // slider has a max height
-                          ),
-                          child: TransportationSlider(
-                            transportations: order.transportationReservations
-                                .map((transport) => {
-                                      'departureTime': TimeOfDay(
-                                        hour:
-                                            DateTime.parse(transport.pickupTime)
-                                                .hour,
-                                        minute:
-                                            DateTime.parse(transport.pickupTime)
-                                                .minute,
-                                      ),
-                                      'departurePlace':
-                                          transport.departureAirportName ??
-                                              'Unknown',
-                                      'arrivalTime': TimeOfDay(
-                                        hour: DateTime.parse(
-                                                transport.dropoffTime)
-                                            .hour,
-                                        minute: DateTime.parse(
-                                                transport.dropoffTime)
-                                            .minute,
-                                      ),
-                                      'arrivalPlace':
-                                          transport.arrivalAirportName ??
-                                              'Unknown',
-                                      'date':
-                                          '${DateTime.parse(transport.pickupTime).day}.${DateTime.parse(transport.pickupTime).month}.${DateTime.parse(transport.pickupTime).year}',
-                                      'type': transport.transportType == 40
-                                          ? 'flight'
-                                          : 'bus',
-                                    })
-                                .toList(),
-                          ),
-                        ),
-                      ),
-
-                      // Main content
-                      Padding(
-                        padding: EdgeInsets.only(top: mainContentPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      return SingleChildScrollView(
+                        child: Stack(
                           children: [
+                            // Hotel image
+                            Container(
+                              height: screenHeight * 0.25,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/icons/hotel.jpg'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            // Transportation slider
+                            Positioned(
+                              top: sliderTop,
+                              left: 0,
+                              right: 0,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      sliderHeight, // slider has a max height
+                                ),
+                                child: TransportationSlider(
+                                  transportations: order
+                                      .transportationReservations
+                                      .map((transport) => {
+                                            'departureTime': TimeOfDay(
+                                              hour: DateTime.parse(
+                                                      transport.pickupTime)
+                                                  .hour,
+                                              minute: DateTime.parse(
+                                                      transport.pickupTime)
+                                                  .minute,
+                                            ),
+                                            'departurePlace': transport
+                                                    .departureAirportName ??
+                                                'Unknown',
+                                            'arrivalTime': TimeOfDay(
+                                              hour: DateTime.parse(
+                                                      transport.dropoffTime)
+                                                  .hour,
+                                              minute: DateTime.parse(
+                                                      transport.dropoffTime)
+                                                  .minute,
+                                            ),
+                                            'arrivalPlace':
+                                                transport.arrivalAirportName ??
+                                                    'Unknown',
+                                            'date':
+                                                '${DateTime.parse(transport.pickupTime).day}.${DateTime.parse(transport.pickupTime).month}.${DateTime.parse(transport.pickupTime).year}',
+                                            'type':
+                                                transport.transportType == 40
+                                                    ? 'flight'
+                                                    : 'bus',
+                                          })
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+
+                            // Main content
                             Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.04),
+                              padding: EdgeInsets.only(top: mainContentPadding),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          resortName,
-                                          style: TextStyle(
-                                            fontSize: screenHeight * 0.035,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      if (stars > 0)
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: screenWidth * 0.02),
-                                          child: Text(
-                                            '★' * stars,
-                                            style: TextStyle(
-                                              fontSize: screenHeight * 0.025,
-                                              color: Colors.orange,
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: screenWidth * 0.04),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                resortName,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      screenHeight * 0.035,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
+                                            if (stars > 0)
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: screenWidth * 0.02),
+                                                child: Text(
+                                                  '★' * stars,
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        screenHeight * 0.025,
+                                                    color: Colors.orange,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                        SizedBox(height: screenHeight * 0.01),
+                                        Text(
+                                          location,
+                                          style: TextStyle(
+                                            fontSize: screenHeight * 0.02,
+                                            color: Colors.grey[700],
                                           ),
                                         ),
-                                    ],
-                                  ),
-                                  SizedBox(height: screenHeight * 0.01),
-                                  Text(
-                                    location,
-                                    style: TextStyle(
-                                      fontSize: screenHeight * 0.02,
-                                      color: Colors.grey[700],
+                                        Text(
+                                          travelDates,
+                                          style: TextStyle(
+                                            fontSize: screenHeight * 0.018,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    travelDates,
-                                    style: TextStyle(
-                                      fontSize: screenHeight * 0.018,
-                                      color: Colors.grey,
-                                    ),
+                                  SizedBox(height: screenHeight * 0.02),
+                                  ServicesCard(
+                                    orderNumber: order.id.toString(),
+                                    accommodations:
+                                        order.accommodationReservations,
+                                    services: order.prices,
+                                    teeTimes: teeTimes,
+                                    transportations:
+                                        order.transportationReservations,
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(height: screenHeight * 0.02),
-                            ServicesCard(
-                              orderNumber: order.id.toString(),
-                              accommodations: order.accommodationReservations,
-                              services: order.prices,
-                              teeTimes: teeTimes,
-                              transportations: order.transportationReservations,
-                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

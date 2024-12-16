@@ -79,7 +79,7 @@ class OrderCard extends StatelessWidget {
               ),
               // Order number stripe
               Container(
-                color: const Color(0xFFD68E26),
+                color: Color.fromARGB(201, 146, 96, 52),
                 padding: EdgeInsets.symmetric(
                   vertical: screenHeight * 0.01,
                   horizontal: screenWidth * 0.04,

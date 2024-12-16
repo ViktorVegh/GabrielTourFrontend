@@ -42,21 +42,19 @@ class _RoleSpecificNavbarState extends State<RoleSpecificNavbar> {
     }
   }
 
-  // Navigation logic for user
   void _navigateUser(int index) {
     switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(context, '/searchTrips');
-        break;
-      case 1:
+      case 0: // My Trip
         Navigator.pushReplacementNamed(context, '/myTrips');
         break;
-      case 2:
+      case 1: // Messages
         Navigator.pushReplacementNamed(context, '/messages');
         break;
-      case 3:
+      case 2: // Profile
         Navigator.pushReplacementNamed(context, '/profile');
         break;
+      default:
+        throw Exception("Invalid index for user navbar: $index");
     }
   }
 

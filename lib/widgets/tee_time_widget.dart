@@ -80,7 +80,7 @@ class TeeTimeWidget extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.group,
-                    color: Colors.orange,
+                    color: const Color.fromARGB(255, 144, 101, 85),
                     size: baseFontSize,
                   ),
                   Text(
