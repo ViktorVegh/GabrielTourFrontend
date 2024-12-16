@@ -64,7 +64,7 @@ class PersonService {
   Future<PersonDTO?> getPersonByProfisId(int profisId) async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/person/profis/$profisId'),
+      Uri.parse('http://13.53.236.35:9090/api/person/profis/$profisId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ class PersonService {
   Future<List<PersonDTO>> getAllDrivers() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/person/all/drivers'),
+      Uri.parse('http://13.53.236.35:9090/api/person/all/drivers'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ class DrivesScheduleService {
   Future<DrivesCalendarDTO> getMonthlyCalendar() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/drives-calendar/monthly'),
+      Uri.parse('http://13.53.236.35:9090/api/drives-calendar/monthly'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ class DrivesScheduleService {
   Future<void> removeDrivesFromCalendar(List<int> driveIds) async {
     final token = await _jwtService.getToken();
     final response = await http.delete(
-      Uri.parse('http://localhost:9090/api/drives/remove'),
+      Uri.parse('http://13.53.236.35:9090/api/drives/remove'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ class DrivesScheduleService {
   Future<void> addDriveToCalendar(int driveId) async {
     final token = await _jwtService.getToken();
     final response = await http.post(
-      Uri.parse('http://localhost:9090/api/drives/add?driveId=$driveId'),
+      Uri.parse('http://13.53.236.35:9090/api/drives/add?driveId=$driveId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
