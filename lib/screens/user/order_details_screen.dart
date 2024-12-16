@@ -64,8 +64,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     final sliderTop = screenHeight * 0.06;
-    final sliderHeight = screenHeight * 0.32;
-    final mainContentPadding = sliderTop + screenHeight * 0.27;
+    final sliderHeight = screenHeight * 0.8;
+    final mainContentPadding = sliderTop + screenHeight * 0.30;
 
     return RoleSpecificNavbar(
       role: 'user',
@@ -164,12 +164,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               top: sliderTop,
                               left: 0,
                               right: 0,
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight:
-                                      sliderHeight, // slider has a max height
-                                ),
-                                child: TransportationSlider(
+                              child: SizedBox(
+    height: screenHeight * 0.28, // Directly set a larger height
+    child: TransportationSlider(
                                   transportations: order
                                       .transportationReservations
                                       .map((transport) => {
