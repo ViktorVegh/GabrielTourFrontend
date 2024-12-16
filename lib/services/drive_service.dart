@@ -12,7 +12,7 @@ class DriveService {
   Future<List<DriveDTO>> getAllUntrackedDrives() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/drives/upcoming'),
+      Uri.parse('http://13.53.236.35:9090/api/drives/upcoming'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ class DriveService {
   Future<DriveDTO> createDrive(DriveDTO drive) async {
     final token = await _jwtService.getToken();
     final response = await http.post(
-      Uri.parse('http://localhost:9090/api/drives'),
+      Uri.parse('http://13.53.236.35:9090/api/drives'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ class DriveService {
   Future<DriveDTO> updateDrive(int driveId, DriveDTO drive) async {
     final token = await _jwtService.getToken();
     final response = await http.put(
-      Uri.parse('http://localhost:9090/api/drives/$driveId'),
+      Uri.parse('http://13.53.236.35:9090/api/drives/$driveId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ class DriveService {
   Future<void> deleteDrive(int driveId) async {
     final token = await _jwtService.getToken();
     final response = await http.delete(
-      Uri.parse('http://localhost:9090/api/drives/$driveId'),
+      Uri.parse('http://13.53.236.35:9090/api/drives/$driveId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ class DriveService {
   Future<List<DriveDTO>> getAllDrives() async {
     final token = await _jwtService.getToken();
     final response = await http.get(
-      Uri.parse('http://localhost:9090/api/drives/all'),
+      Uri.parse('http://13.53.236.35:9090/api/drives/all'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
