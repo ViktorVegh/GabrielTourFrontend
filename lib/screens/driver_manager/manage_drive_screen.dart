@@ -9,11 +9,13 @@ class ManageDriveScreen extends StatefulWidget {
   final DriveDTO drive;
   final DriveService driveService;
   final PersonService personService;
+  final String userRole; // Add userRole
 
   ManageDriveScreen({
     required this.drive,
     required this.driveService,
     required this.personService,
+    required this.userRole, // Add this parameter
   });
 
   @override
@@ -97,6 +99,13 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
   }
 
   void _updateDrive() async {
+    if (widget.userRole != 'office' && widget.userRole != 'drivermanager') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Access denied: Insufficient permissions')),
+      );
+      return; // Stop the function if the role is not authorized
+    }
+
     try {
       final updatedDrive = widget.drive.copyWith(
         departurePlace: _departureController.text,
@@ -107,6 +116,13 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
         dropoffTime: _dropoffTimeController.text,
         driverId: _selectedDriverId,
       );
+
+      // Print the payload being sent
+      print('--- Update Drive Payload ---');
+      print('Drive ID: ${widget.drive.id}');
+      print(
+          'Payload: ${updatedDrive.toJson()}'); // Assuming a toJson() method exists
+
       await widget.driveService.updateDrive(widget.drive.id, updatedDrive);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -114,6 +130,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
       );
       Navigator.pop(context);
     } catch (e) {
+      print('Update Error: $e'); // Log the error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update drive: $e')),
       );
@@ -121,13 +138,25 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
   }
 
   void _deleteDrive() async {
+    if (widget.userRole != 'office' && widget.userRole != 'drivermanager') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Access denied: Insufficient permissions')),
+      );
+      return; // Stop the function if the role is not authorized
+    }
+
     try {
+      print('--- Delete Drive Request ---');
+      print('Drive ID: ${widget.drive.id}');
+
       await widget.driveService.deleteDrive(widget.drive.id);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Drive deleted successfully!')),
       );
       Navigator.pop(context);
     } catch (e) {
+      print('Delete Error: $e'); // Log the error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to delete drive: $e')),
       );
@@ -442,6 +471,17 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
         ],
       ),
     );
+  }
+
+  void _checkUserRole() {
+    print('User Role: ${widget.userRole}');
+    if (widget.userRole == 'office' || widget.userRole == 'drivermanager') {
+      // Perform operations for authorized roles
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Access denied: Insufficient permissions')),
+      );
+    }
   }
 
   void _showDeleteConfirmationDialog(BuildContext context) {

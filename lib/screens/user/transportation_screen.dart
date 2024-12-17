@@ -107,7 +107,7 @@ class TransportationScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: screenHeight * 0.025,
+                fontSize: screenHeight * 0.021,
                 fontWeight: FontWeight.w600,
               ),
             ),

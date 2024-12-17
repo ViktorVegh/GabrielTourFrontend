@@ -39,139 +39,167 @@ class DriveDetailsWidget extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Drive Details'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: onClose,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Padding(
+          padding: EdgeInsets.only(top: screenHeight * 0.02),
+          child: Image.asset(
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.04, // Logo height
           ),
-        ],
+        ),
+        centerTitle: true,
       ),
-      body: FutureBuilder<List<String>>(
-        future: Future.wait(userIds.map((id) => _fetchUserEmail(id))),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Error loading user details',
-                style:
-                    TextStyle(color: Colors.red, fontSize: screenWidth * 0.05),
-              ),
-            );
-          }
-
-          final userEmails = snapshot.data ?? [];
-
-          return SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.all(screenWidth * 0.05),
-              padding: EdgeInsets.all(screenWidth * 0.05),
-              decoration: BoxDecoration(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenHeight * 0.015),
+          // Brown bar with "Drive Details" title
+          Container(
+            width: double.infinity,
+            color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
+            child: Text(
+              'Drive Details', // Bar text
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 8.0,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Date Header
-                  Center(
-                    child: Text(
-                      'Date: ${drive.date}',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.05,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Departure Section
-                  _buildDetailSection(
-                    title: 'Departure',
-                    time: drive.pickupTime != null
-                        ? _formatTime(drive.pickupTime!)
-                        : 'N/A',
-                    place: drive.departurePlace,
-                    screenWidth: screenWidth,
-                  ),
-
-                  // Arrival Section
-                  _buildDetailSection(
-                    title: 'Arrival',
-                    time: drive.dropoffTime != null
-                        ? _formatTime(drive.dropoffTime!)
-                        : 'N/A',
-                    place: drive.arrivalPlace,
-                    screenWidth: screenWidth,
-                  ),
-
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Reason
-                  _buildSectionHeader(
-                    'Reason',
-                    drive.customReason ?? 'Not provided',
-                    screenWidth,
-                  ),
-
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Driver Email
-                  FutureBuilder<String>(
-                    future: drive.driverId != null
-                        ? _fetchDriverEmail(drive.driverId!)
-                        : Future.value('No Driver Assigned'),
-                    builder: (context, driverSnapshot) {
-                      if (driverSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-
-                      if (driverSnapshot.hasError) {
-                        return _buildSectionHeader('Driver',
-                            'Error loading driver details', screenWidth);
-                      }
-
-                      return _buildSectionHeader(
-                        'Driver',
-                        driverSnapshot.data ?? 'Unknown Driver',
-                        screenWidth,
-                      );
-                    },
-                  ),
-
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Users Section
-                  Text(
-                    'Users:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: screenWidth * 0.045,
-                    ),
-                  ),
-                  ...userEmails.map(
-                    (email) => Text(
-                      email,
-                      style: TextStyle(fontSize: screenWidth * 0.045),
-                    ),
-                  ),
-                ],
+                fontSize: screenHeight * 0.021, // Relative font size
+                fontWeight: FontWeight.w600,
               ),
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: FutureBuilder<List<String>>(
+              future: Future.wait(userIds.map((id) => _fetchUserEmail(id))),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Error loading user details',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: screenWidth * 0.05,
+                      ),
+                    ),
+                  );
+                }
+
+                final userEmails = snapshot.data ?? [];
+
+                return SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.all(screenWidth * 0.05),
+                    padding: EdgeInsets.all(screenWidth * 0.05),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          blurRadius: 8.0,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Date Header
+                        Center(
+                          child: Text(
+                            'Date: ${drive.date}',
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.05,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+
+                        // Departure Section
+                        _buildDetailSection(
+                          title: 'Departure',
+                          time: drive.pickupTime != null
+                              ? '${_formatTime(drive.pickupTime!)},'
+                              : 'N/A',
+                          place: drive.departurePlace,
+                          screenWidth: screenWidth,
+                        ),
+
+                        // Arrival Section
+                        _buildDetailSection(
+                          title: 'Arrival',
+                          time: drive.dropoffTime != null
+                              ? '${_formatTime(drive.dropoffTime!)},'
+                              : 'N/A',
+                          place: drive.arrivalPlace,
+                          screenWidth: screenWidth,
+                        ),
+
+                        SizedBox(height: screenHeight * 0.02),
+
+                        // Reason
+                        _buildSectionHeader(
+                          'Reason',
+                          drive.customReason ?? 'Not provided',
+                          screenWidth,
+                        ),
+
+                        SizedBox(height: screenHeight * 0.02),
+
+                        // Driver Email
+                        FutureBuilder<String>(
+                          future: drive.driverId != null
+                              ? _fetchDriverEmail(drive.driverId!)
+                              : Future.value('No Driver Assigned'),
+                          builder: (context, driverSnapshot) {
+                            if (driverSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            if (driverSnapshot.hasError) {
+                              return _buildSectionHeader('Driver',
+                                  'Error loading driver details', screenWidth);
+                            }
+
+                            return _buildSectionHeader(
+                              'Driver',
+                              driverSnapshot.data ?? 'Unknown Driver',
+                              screenWidth,
+                            );
+                          },
+                        ),
+
+                        SizedBox(height: screenHeight * 0.02),
+
+                        // Users Section
+                        Text(
+                          'Users:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenWidth * 0.045,
+                          ),
+                        ),
+                        ...userEmails.map(
+                          (email) => Text(
+                            email,
+                            style: TextStyle(fontSize: screenWidth * 0.045),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -199,7 +227,6 @@ class DriveDetailsWidget extends StatelessWidget {
               time,
               style: TextStyle(
                 fontSize: screenWidth * 0.045,
-                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(width: screenWidth * 0.02),
@@ -216,7 +243,7 @@ class DriveDetailsWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: screenWidth * 0.03),
+        SizedBox(height: screenWidth * 0.01),
       ],
     );
   }

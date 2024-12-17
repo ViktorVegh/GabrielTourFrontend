@@ -37,7 +37,7 @@ class TeeTimesScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: screenHeight * 0.025, // Relative font size
+                fontSize: screenHeight * 0.021, // Relative font size
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -57,9 +57,14 @@ class TeeTimesScreen extends StatelessWidget {
                       const String placeholderGolfCourseName =
                           'Sueno Golf Belek';
 
-                      return TeeTimeWidget(
-                        teeTime: teeTime,
-                        golfCourseName: placeholderGolfCourseName,
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height *
+                                0.01), // Add spacing below each item
+                        child: TeeTimeWidget(
+                          teeTime: teeTime,
+                          golfCourseName: placeholderGolfCourseName,
+                        ),
                       );
                     },
                   ),

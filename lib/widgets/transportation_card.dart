@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import intl for date formatting
 
 class TransportationCard extends StatelessWidget {
   final String type; // flight, car, or bus
@@ -31,95 +32,131 @@ class TransportationCard extends StatelessWidget {
     }
   }
 
+  String _formatTime(String time) {
+    try {
+      final parsedTime = DateFormat("HH:mm:ss").parse(time);
+      return DateFormat("HH:mm").format(parsedTime);
+    } catch (e) {
+      return time; // Return the original string if parsing fails
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Transportation Icon and Date
+            // Icon and Date Row
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  _getIconForType(),
-                  size: 40,
-                  color: Colors.blue,
+                Row(
+                  children: [
+                    Icon(
+                      _getIconForType(),
+                      size: screenWidth * 0.06,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      _getDisplayNameForType(type),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
                 Text(
                   date,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 84, 84, 84),
+                    color: Color.fromARGB(255, 94, 94, 94),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 0),
-            // Departure Info aligned with date
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 56.0), // Offset to align with the date
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    departureTime,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+            const SizedBox(height: 12),
+            // Departure and Arrival Info Row
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Departure Info
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _formatTime(departureTime), // Format departure time
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    departurePlace,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Arrow pointing down, aligned with arrival info
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    right: 220.0), // Align arrow with text
-                child: Icon(
-                  Icons.arrow_downward,
-                  size: 24,
-                  color: Colors.grey,
+                    Text(
+                      departurePlace,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Arrival Info aligned with date
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 56.0), // Offset to align with the date
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    arrivalTime,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                // Arrow
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Icon(
+                    Icons.arrow_forward,
+                    size: screenWidth * 0.05,
+                    color: Colors.grey,
+                  ),
+                ),
+                // Arrival Info
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _formatTime(arrivalTime), // Format arrival time
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    arrivalPlace,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
+                    Text(
+                      arrivalPlace,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _getDisplayNameForType(String type) {
+    switch (type.toLowerCase()) {
+      case 'flight':
+        return 'Let'; // Replace "flight" with "Let"
+      case 'car':
+        return 'Auto'; // Example for car
+      case 'bus':
+        return 'Autobus'; // Example for bus
+      default:
+        return 'Neznáme'; // Default case for unknown types
+    }
   }
 }

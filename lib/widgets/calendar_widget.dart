@@ -3,6 +3,7 @@ import 'package:gabriel_tour_app/dtos/drive_dto.dart';
 import 'package:gabriel_tour_app/widgets/drive_item_widget.dart';
 import 'package:gabriel_tour_app/services/drive_service.dart';
 import 'package:gabriel_tour_app/services/person_service.dart';
+import 'package:gabriel_tour_app/widgets/drive_details_widget.dart';
 
 class CalendarWidget extends StatefulWidget {
   final Function(DateTime) onDateSelected;
@@ -244,38 +245,92 @@ class DrivesDetailsPage extends StatelessWidget {
     this.driveService, // Optional
     this.personService, // Optional
   });
-
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Drives on ${_formattedDate(selectedDay)}'),
+        backgroundColor: Colors.white, // White background
+        elevation: 1, // Slight elevation
+        title: Padding(
+          padding: EdgeInsets.only(top: screenHeight * 0.02),
+          child: Image.asset(
+            'assets/icons/gabrieltour-logo-2023.png', // Logo
+            height: screenHeight * 0.04, // Relative logo height
+          ),
+        ),
+        centerTitle: true, // Center the logo
       ),
-      body: drives.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'No drives scheduled for this day.',
-                  style: TextStyle(fontSize: 16),
-                ),
+      backgroundColor: Colors.white, // Match background color
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenHeight * 0.015), // Relative spacing
+          // Brown Bar with Date String
+          Container(
+            width: double.infinity,
+            color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
+            child: Text(
+              '${_formattedDate(selectedDay)}', // Date String
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: screenHeight * 0.021, // Relative font size
+                fontWeight: FontWeight.w600,
               ),
-            )
-          : ListView.builder(
-              itemCount: drives.length,
-              itemBuilder: (context, index) {
-                final drive = drives[index];
-                return DriveItem(
-                  drive: drive,
-                  onTap: () {
-                    debugPrint('Drive tapped: $drive');
-                    if (userRole == 'drivermanager' || userRole == 'office') {
-                      _showEditDeleteOptions(context, drive);
-                    }
-                  },
-                );
-              },
             ),
+          ),
+          // Body Section: Drives List
+          Expanded(
+            child: drives.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        userRole == 'office' || userRole == 'drivermanager'
+                            ? 'Žiadne jazdy pre vybraný deň.' // Slovak for office or manager
+                            : 'No drives scheduled for this day.', // Default for other roles
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: const Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: drives.length,
+                    itemBuilder: (context, index) {
+                      final drive = drives[index];
+                      return DriveItem(
+                        drive: drive,
+                        onTap: () {
+                          debugPrint('Drive tapped: $drive');
+                          if (userRole == 'driver') {
+                            // Open DriveDetailsWidget for drivers
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DriveDetailsWidget(
+                                  drive: drive,
+                                  personService: personService!,
+                                  onClose: () => Navigator.pop(context),
+                                ),
+                              ),
+                            );
+                          } else if (userRole == 'drivermanager' ||
+                              userRole == 'office') {
+                            // Show edit/delete options for managers or office staff
+                            _showEditDeleteOptions(context, drive);
+                          }
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
     );
   }
 

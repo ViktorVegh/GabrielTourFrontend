@@ -93,11 +93,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               color: const Color.fromARGB(201, 146, 96, 52), // Brown background
               padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
               child: Text(
-                'Moja Objednávka', // Screen title
+                'Detaily Zájazdu', // Screen title
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenHeight * 0.025, // Relative font size
+                  fontSize: screenHeight * 0.021, // Relative font size
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -165,8 +165,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               left: 0,
                               right: 0,
                               child: SizedBox(
-    height: screenHeight * 0.28, // Directly set a larger height
-    child: TransportationSlider(
+                                height: screenHeight *
+                                    0.28, // Directly set a larger height
+                                child: TransportationSlider(
                                   transportations: order
                                       .transportationReservations
                                       .map((transport) => {

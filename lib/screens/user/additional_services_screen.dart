@@ -42,7 +42,7 @@ class AdditionalServicesScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenHeight * 0.025, // Relative font size
+                  fontSize: screenHeight * 0.021, // Relative font size
                   fontWeight: FontWeight.w600,
                 ),
               ),

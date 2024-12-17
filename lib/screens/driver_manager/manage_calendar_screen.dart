@@ -99,7 +99,8 @@ class _ManageCalendarScreenState extends State<ManageCalendarScreen> {
                               calendarSnapshot.data!.monthStartDate),
                           monthEndDate: DateTime.parse(
                               calendarSnapshot.data!.monthEndDate),
-                          drives: {}, // Provide grouped drives if needed
+                          drives:
+                              _createEventMap(calendarSnapshot.data!.drives),
                           userRole: userRole!,
                           driveService: widget.driveService,
                           personService: widget.personService,
@@ -162,6 +163,8 @@ class _ManageCalendarScreenState extends State<ManageCalendarScreen> {
                                                       widget.driveService,
                                                   personService:
                                                       widget.personService,
+                                                  userRole:
+                                                      userRole!, // Pass userRole here
                                                 ),
                                               ),
                                             ).then((_) {
@@ -189,5 +192,19 @@ class _ManageCalendarScreenState extends State<ManageCalendarScreen> {
               },
             ),
     );
+  }
+
+  Map<DateTime, List<DriveDTO>> _createEventMap(List<DriveDTO> drives) {
+    final Map<DateTime, List<DriveDTO>> eventMap = {};
+    for (var drive in drives) {
+      final date = DateTime.parse(drive.date);
+      final key = DateTime(date.year, date.month, date.day);
+      if (!eventMap.containsKey(key)) {
+        eventMap[key] = [];
+      }
+      eventMap[key]!.add(drive);
+    }
+    debugPrint('Created event map for the calendar: $eventMap');
+    return eventMap;
   }
 }

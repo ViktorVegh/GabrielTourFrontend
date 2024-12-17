@@ -75,39 +75,53 @@ class UserNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SelectableBottomNavbar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.message, // Flutter icon for "Messages"
-            size: 40,
-            color: currentIndex == 0
-                ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
-                : Colors.grey, // Grey when unselected
+    return Column(
+      mainAxisSize: MainAxisSize.min, // Ensure the column takes minimum space
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 16.0), // Add horizontal padding
+          child: Divider(
+            color: const Color.fromARGB(255, 158, 158, 158), // Divider color
+            thickness: 1, // Thickness of the line
+            height: 1, // Height of the divider
           ),
-          label: 'Správy',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.airplane_ticket, // Flutter icon for "My Trip"
-            size: 40,
-            color: currentIndex == 1
-                ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
-                : Colors.grey, // Grey when unselected
-          ),
-          label: 'Môj zájazd',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person, // Flutter icon for "Profile"
-            size: 40,
-            color: currentIndex == 2
-                ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
-                : Colors.grey, // Grey when unselected
-          ),
-          label: 'Profil',
+        SelectableBottomNavbar(
+          currentIndex: currentIndex,
+          onTap: onTap,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.message, // Flutter icon for "Messages"
+                size: 30,
+                color: currentIndex == 0
+                    ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
+                    : Colors.grey, // Grey when unselected
+              ),
+              label: 'Správy',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.airplane_ticket, // Flutter icon for "My Trip"
+                size: 30,
+                color: currentIndex == 1
+                    ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
+                    : Colors.grey, // Grey when unselected
+              ),
+              label: 'Môj zájazd',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person, // Flutter icon for "Profile"
+                size: 30,
+                color: currentIndex == 2
+                    ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
+                    : Colors.grey, // Grey when unselected
+              ),
+              label: 'Profil',
+            ),
+          ],
         ),
       ],
     );
