@@ -170,102 +170,135 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Edit Drive', style: TextStyle(fontSize: screenWidth * 0.05)),
+        backgroundColor: Colors.white, // White AppBar background
+        elevation: 1,
+        title: Padding(
+          padding: EdgeInsets.only(top: screenHeight * 0.02),
+          child: Image.asset(
+            'assets/icons/gabrieltour-logo-2023.png', // Logo asset
+            height: screenHeight * 0.04, // Logo height relative to screen
+          ),
+        ),
+        centerTitle: true, // Center the logo
       ),
+      backgroundColor:
+          const Color.fromARGB(255, 248, 248, 248), // Light gray background
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Align(
-              alignment:
-                  Alignment.topCenter, // Align the content to the top center
-              child: SingleChildScrollView(
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: screenHeight * 0.05, // Add space from the top
-                    left: screenWidth * 0.05,
-                    right: screenWidth * 0.05,
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      height: screenHeight * 0.015), // Spacing below AppBar
+                  // Title Section with brown bar
+                  Container(
+                    width: double.infinity,
+                    color: const Color.fromARGB(
+                        201, 146, 96, 52), // Brown background
+                    padding:
+                        EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+                    child: Text(
+                      'Pridať jazdu do kalendára', // Screen Title
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenHeight * 0.015,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  padding: EdgeInsets.all(screenWidth * 0.05),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
+                  // Form Content
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        top: screenHeight * 0.03,
+                        left: screenWidth * 0.05,
+                        right: screenWidth * 0.05,
+                        bottom: screenHeight * 0.03,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Upravte Detaily Jazdy",
-                        style: TextStyle(
-                          fontSize: screenWidth *
-                              0.05, // Adjust font size relative to screen
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                      padding: EdgeInsets.all(screenWidth * 0.05),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      Divider(
-                        height: 30,
-                        thickness: 1,
-                      ),
-                      if (_userEmail != null)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Klient: ',
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.04,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: _userEmail,
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.04,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Upravte Detaily Jazdy", // Title
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.05,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
-                        ),
-                      _buildDateTimePicker('Datum jazdy', _dateController,
-                          _pickDate, screenWidth, screenHeight),
-                      _buildDateTimePicker(
-                          'Pick-Up Time',
-                          _pickupTimeController,
-                          _pickPickupTime,
-                          screenWidth,
-                          screenHeight),
-                      _buildDateTimePicker(
-                          'Drop-Off Time',
-                          _dropoffTimeController,
-                          _pickDropoffTime,
-                          screenWidth,
-                          screenHeight),
-                      _buildTextField('Departure Place', _departureController,
-                          screenWidth, screenHeight),
-                      _buildTextField('Arrival Place', _arrivalController,
-                          screenWidth, screenHeight),
-                      _buildTextField('Reason', _reasonController, screenWidth,
-                          screenHeight),
-                      _buildDriverDropdown(screenWidth, screenHeight),
-                      SizedBox(height: screenHeight * 0.01),
-                      _buildActions(screenWidth),
-                    ],
+                          Divider(height: 20, thickness: 1),
+                          if (_userEmail != null)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Klient: ',
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.04,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: _userEmail,
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.04,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          _buildDateTimePicker('Datum jazdy', _dateController,
+                              _pickDate, screenWidth, screenHeight),
+                          _buildDateTimePicker(
+                              'Pick-Up Time',
+                              _pickupTimeController,
+                              _pickPickupTime,
+                              screenWidth,
+                              screenHeight),
+                          _buildDateTimePicker(
+                              'Drop-Off Time',
+                              _dropoffTimeController,
+                              _pickDropoffTime,
+                              screenWidth,
+                              screenHeight),
+                          _buildTextField('Departure Place',
+                              _departureController, screenWidth, screenHeight),
+                          _buildTextField('Arrival Place', _arrivalController,
+                              screenWidth, screenHeight),
+                          _buildTextField('Reason', _reasonController,
+                              screenWidth, screenHeight),
+                          _buildDriverDropdown(screenWidth, screenHeight),
+                          SizedBox(height: screenHeight * 0.02),
+                          _buildActions(
+                              screenWidth), // Buttons for Submit/Delete
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
     );

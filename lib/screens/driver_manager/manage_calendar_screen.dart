@@ -64,133 +64,168 @@ class _ManageCalendarScreenState extends State<ManageCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          'Manage Drives Calendar',
-          style: TextStyle(color: Colors.black, fontSize: screenWidth * 0.05),
+        backgroundColor: Colors.white, // White background
+        elevation: 1, // Slight elevation
+        title: Padding(
+          padding:
+              EdgeInsets.only(top: screenHeight * 0.02), // Relative top padding
+          child: Image.asset(
+            'assets/icons/gabrieltour-logo-2023.png', // Logo asset
+            height: screenHeight * 0.04, // Logo height relative to screen size
+          ),
         ),
+        centerTitle: true, // Center the logo in the AppBar
       ),
-      body: userRole == null
-          ? Center(
-              child:
-                  CircularProgressIndicator()) // Loader until role is fetched
-          : FutureBuilder<DrivesCalendarDTO>(
-              future: calendarData,
-              builder: (context, calendarSnapshot) {
-                if (calendarSnapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (calendarSnapshot.hasError) {
-                  return Center(
-                      child: Text('Error: ${calendarSnapshot.error}'));
-                } else if (!calendarSnapshot.hasData) {
-                  return Center(child: Text('No calendar data available.'));
-                } else {
-                  return Column(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: CalendarWidget(
-                          onDateSelected: (date) {},
-                          monthStartDate: DateTime.parse(
-                              calendarSnapshot.data!.monthStartDate),
-                          monthEndDate: DateTime.parse(
-                              calendarSnapshot.data!.monthEndDate),
-                          drives:
-                              _createEventMap(calendarSnapshot.data!.drives),
-                          userRole: userRole!,
-                          driveService: widget.driveService,
-                          personService: widget.personService,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: FutureBuilder<List<DriveDTO>>(
-                          future: upcomingDrives,
-                          builder: (context, upcomingSnapshot) {
-                            if (upcomingSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (upcomingSnapshot.hasError) {
-                              return Center(
-                                  child:
-                                      Text('Error: ${upcomingSnapshot.error}'));
-                            } else if (!upcomingSnapshot.hasData ||
-                                upcomingSnapshot.data!.isEmpty) {
-                              return Center(
-                                child: Text(
-                                  'No upcoming drives available.',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Upcoming Drives',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: upcomingSnapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        final drive =
-                                            upcomingSnapshot.data![index];
-                                        return UpcomingDriveItem(
-                                          drive: drive,
-                                          personService: widget.personService,
-                                          onManage: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ManageDriveScreen(
-                                                  drive: drive,
-                                                  driveService:
-                                                      widget.driveService,
-                                                  personService:
-                                                      widget.personService,
-                                                  userRole:
-                                                      userRole!, // Pass userRole here
-                                                ),
-                                              ),
-                                            ).then((_) {
-                                              // Refresh upcomingDrives after returning
-                                              setState(() {
-                                                upcomingDrives = widget
-                                                    .driveService
-                                                    .getAllUntrackedDrives();
-                                              });
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              },
+      backgroundColor:
+          const Color.fromARGB(255, 248, 248, 248), // Background color
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title bar below AppBar
+          SizedBox(height: screenHeight * 0.015), // Spacing below AppBar
+          Container(
+            width: double.infinity,
+            color: const Color.fromARGB(201, 146, 96, 52), // Brown color
+            padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.01), // Vertical padding
+            child: Text(
+              'Kalenár Jazdy', // Screen Title
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white, // White text
+                fontSize: screenHeight * 0.015, // Relative font size
+                fontWeight: FontWeight.w600, // Bold text
+              ),
             ),
+          ),
+          // Body Content
+          Expanded(
+            child: userRole == null
+                ? Center(child: CircularProgressIndicator())
+                : FutureBuilder<DrivesCalendarDTO>(
+                    future: calendarData,
+                    builder: (context, calendarSnapshot) {
+                      if (calendarSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (calendarSnapshot.hasError) {
+                        return Center(
+                            child: Text('Error: ${calendarSnapshot.error}'));
+                      } else if (!calendarSnapshot.hasData) {
+                        return Center(
+                            child: Text('No calendar data available.'));
+                      } else {
+                        return Column(
+                          children: [
+                            // Calendar Widget
+                            Expanded(
+                              flex: 4,
+                              child: CalendarWidget(
+                                onDateSelected: (date) {},
+                                monthStartDate: DateTime.parse(
+                                    calendarSnapshot.data!.monthStartDate),
+                                monthEndDate: DateTime.parse(
+                                    calendarSnapshot.data!.monthEndDate),
+                                drives: _createEventMap(
+                                    calendarSnapshot.data!.drives),
+                                userRole: userRole!,
+                                driveService: widget.driveService,
+                                personService: widget.personService,
+                              ),
+                            ),
+                            // Upcoming Drives Section
+                            Expanded(
+                              flex: 4,
+                              child: FutureBuilder<List<DriveDTO>>(
+                                future: upcomingDrives,
+                                builder: (context, upcomingSnapshot) {
+                                  if (upcomingSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (upcomingSnapshot.hasError) {
+                                    return Center(
+                                        child: Text(
+                                            'Error: ${upcomingSnapshot.error}'));
+                                  } else if (!upcomingSnapshot.hasData ||
+                                      upcomingSnapshot.data!.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        'No upcoming drives available.',
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.grey),
+                                      ),
+                                    );
+                                  } else {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Nové jazdy',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount:
+                                                upcomingSnapshot.data!.length,
+                                            itemBuilder: (context, index) {
+                                              final drive =
+                                                  upcomingSnapshot.data![index];
+                                              return UpcomingDriveItem(
+                                                drive: drive,
+                                                personService:
+                                                    widget.personService,
+                                                onManage: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ManageDriveScreen(
+                                                        drive: drive,
+                                                        driveService:
+                                                            widget.driveService,
+                                                        personService: widget
+                                                            .personService,
+                                                        userRole: userRole!,
+                                                      ),
+                                                    ),
+                                                  ).then((_) {
+                                                    setState(() {
+                                                      upcomingDrives = widget
+                                                          .driveService
+                                                          .getAllUntrackedDrives();
+                                                    });
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+          ),
+        ],
+      ),
     );
   }
 

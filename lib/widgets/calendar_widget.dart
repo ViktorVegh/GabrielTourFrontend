@@ -263,7 +263,8 @@ class DrivesDetailsPage extends StatelessWidget {
         ),
         centerTitle: true, // Center the logo
       ),
-      backgroundColor: Colors.white, // Match background color
+      backgroundColor:
+          const Color.fromARGB(255, 248, 248, 248), // Match background color
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

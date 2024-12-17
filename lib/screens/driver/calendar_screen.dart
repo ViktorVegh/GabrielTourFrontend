@@ -67,7 +67,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // White background
+        backgroundColor: Colors.white,
         elevation: 1, // Slight elevation
         title: Padding(
           padding: EdgeInsets.only(top: screenHeight * 0.02),
@@ -78,7 +78,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         centerTitle: true, // Center the logo
       ),
-      backgroundColor: const Color.fromARGB(255, 242, 242, 242),
+      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -139,8 +139,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 3,
+                            Flexible(
+                              flex: 4,
                               child: CalendarWidget(
                                 onDateSelected: (date) {
                                   debugPrint('Date selected: $date');
@@ -165,18 +165,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 8.0),
-                                    child: Text(
-                                      'Drives in ${DateFormat.MMMM().format(visibleMonth)}',
-                                      style: TextStyle(
-                                        fontSize: screenWidth * 0.05,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
+                                  SizedBox(height: screenWidth * 0.02),
                                   Expanded(
                                     child: ListView.builder(
                                       itemCount: drivesByDate.keys.length,
