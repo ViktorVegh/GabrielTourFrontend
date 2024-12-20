@@ -10,7 +10,7 @@ class CalendarWidget extends StatefulWidget {
   final DateTime monthStartDate;
   final DateTime monthEndDate;
   final Map<DateTime, List<DriveDTO>> drives;
-  final String userRole; // Required
+  final String userRole;
   final DriveService? driveService; // Optional
   final PersonService? personService; // Optional
 
@@ -20,8 +20,8 @@ class CalendarWidget extends StatefulWidget {
     required this.monthEndDate,
     required this.drives,
     required this.userRole, // Always required
-    this.driveService, // Optional
-    this.personService, // Optional
+    this.driveService,
+    this.personService,
   });
 
   @override
@@ -140,7 +140,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                     driveService: widget
                                         .driveService, // Pass the service for editing
                                     personService: widget
-                                        .personService, // Pass person service if needed
+                                        .personService, // Pass person service
                                   ),
                                 ),
                               );
@@ -162,12 +162,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                   builder: (context) => DrivesDetailsPage(
                                     selectedDay: day,
                                     drives: widget.drives[day] ?? [],
-                                    userRole: widget
-                                        .userRole, // Pass the role to the details page
-                                    driveService: widget
-                                        .driveService, // Pass the service for editing
-                                    personService: widget
-                                        .personService, // Pass person service if needed
+                                    userRole: widget.userRole,
+                                    driveService: widget.driveService,
+                                    personService: widget.personService,
                                   ),
                                 ),
                               );
@@ -247,39 +244,38 @@ class DrivesDetailsPage extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // White background
-        elevation: 1, // Slight elevation
+        backgroundColor: Colors.white,
+        elevation: 1,
         title: Padding(
           padding: EdgeInsets.only(top: screenHeight * 0.02),
           child: Image.asset(
-            'assets/icons/gabrieltour-logo-2023.png', // Logo
-            height: screenHeight * 0.04, // Relative logo height
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.04,
           ),
         ),
-        centerTitle: true, // Center the logo
+        centerTitle: true,
       ),
-      backgroundColor:
-          const Color.fromARGB(255, 248, 248, 248), // Match background color
+      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: screenHeight * 0.015), // Relative spacing
-          // Brown Bar with Date String
+          SizedBox(height: screenHeight * 0.015),
+
           Container(
             width: double.infinity,
-            color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+            color: const Color.fromARGB(201, 146, 96, 52),
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
             child: Text(
-              '${_formattedDate(selectedDay)}', // Date String
+              '${_formattedDate(selectedDay)}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: screenHeight * 0.021, // Relative font size
+                fontSize: screenHeight * 0.021,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -322,7 +318,7 @@ class DrivesDetailsPage extends StatelessWidget {
                             );
                           } else if (userRole == 'drivermanager' ||
                               userRole == 'office') {
-                            // Show edit/delete options for managers or office staff
+                            // edit/delete options for managers or office staff
                             _showEditDeleteOptions(context, drive);
                           }
                         },
@@ -346,7 +342,7 @@ class DrivesDetailsPage extends StatelessWidget {
               leading: Icon(Icons.edit, color: Colors.blue),
               title: Text('Edit Drive'),
               onTap: () {
-                Navigator.pop(context); // Close the modal
+                Navigator.pop(context);
                 _editDrive(context, drive);
               },
             ),
@@ -354,7 +350,7 @@ class DrivesDetailsPage extends StatelessWidget {
               leading: Icon(Icons.delete, color: Colors.red),
               title: Text('Delete Drive'),
               onTap: () {
-                Navigator.pop(context); // Close the modal
+                Navigator.pop(context);
                 _deleteDrive(context, drive);
               },
             ),
@@ -372,7 +368,7 @@ class DrivesDetailsPage extends StatelessWidget {
       );
       return;
     }
-    // Add edit functionality using driveService
+
     debugPrint('Edit drive: $drive');
   }
 
@@ -404,7 +400,6 @@ class DrivesDetailsPage extends StatelessWidget {
     );
 
     if (confirm == true) {
-      // Call driveService to delete the drive
       debugPrint('Deleting drive: $drive');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Drive deleted successfully')),

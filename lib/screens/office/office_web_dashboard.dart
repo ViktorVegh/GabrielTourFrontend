@@ -42,7 +42,6 @@ class NavigationPanel extends StatelessWidget {
       color: Colors.grey[200],
       child: ListView.separated(
         itemBuilder: (context, index) {
-          // Define the tiles with explicit types
           final List<Map<String, dynamic>> tiles = [
             {'title': 'Trips', 'screen': null},
             {'title': 'Vytvorit Tee Time', 'screen': CreateTeeTimeScreen()},
@@ -52,9 +51,9 @@ class NavigationPanel extends StatelessWidget {
 
           return ListTile(
             title: Text(
-              tiles[index]['title'] as String, // Cast 'title' to String
+              tiles[index]['title'] as String,
               style: TextStyle(
-                fontWeight: FontWeight.bold, // Make the text bold
+                fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
@@ -64,7 +63,7 @@ class NavigationPanel extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => screen as Widget, // Cast 'screen' to Widget
+                    builder: (context) => screen as Widget,
                   ),
                 );
               }
@@ -72,8 +71,7 @@ class NavigationPanel extends StatelessWidget {
           );
         },
         separatorBuilder: (context, index) => Divider(
-          color: Colors.grey, // Add a border between tiles
-          thickness: 1, // Thickness of the border
+          color: Colors.grey,
         ),
         itemCount: 4,
       ),
@@ -81,11 +79,11 @@ class NavigationPanel extends StatelessWidget {
   }
 }
 
-
 class MainContent extends StatefulWidget {
   @override
   _MainContentState createState() => _MainContentState();
 }
+
 class _MainContentState extends State<MainContent>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
@@ -96,32 +94,28 @@ class _MainContentState extends State<MainContent>
   void initState() {
     super.initState();
 
-    // Initialize the animation controller
     _controller = AnimationController(
-      duration: Duration(seconds: 2), // Total duration of the animation
+      duration: Duration(seconds: 2),
       vsync: this,
     );
 
-    // Define the fade-in animation
     _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
-    // Define the scale animation
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
     );
 
-    // Start the animation
     _controller.forward();
   }
 
   @override
   void dispose() {
-    // Dispose of the controller to free resources
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -130,7 +124,7 @@ class _MainContentState extends State<MainContent>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: screenHeight * 0.1), // Spacer above the logo
+          SizedBox(height: screenHeight * 0.1),
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -144,12 +138,11 @@ class _MainContentState extends State<MainContent>
             },
             child: Image.asset(
               'assets/icons/gabrieltour-logo-2023.png',
-              height: screenHeight * 0.1, // Adjust the height of the logo
+              height: screenHeight * 0.1,
             ),
           ),
         ],
       ),
     );
   }
-
 }

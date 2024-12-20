@@ -4,7 +4,7 @@ import '../../services/person_service.dart';
 import '../../services/tee_time_service.dart';
 import '../../services/jwt_service.dart';
 import '../../dtos/person_dto.dart';
-import '../../dtos/tee_time_request_dto.dart';
+// import '../../dtos/tee_time_request_dto.dart';
 import '../../dtos/tee_time_dto.dart';
 
 class DeleteTeeTimeScreen extends StatefulWidget {
@@ -34,8 +34,8 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
   List<TeeTimeDTO> _userTeeTimes = [];
   bool isGreen = false;
   bool needTransport = false;
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
+  // DateTime? _selectedDate;
+  // TimeOfDay? _selectedTime;
   int? _selectedTeeTimeId;
 
   @override
@@ -48,7 +48,8 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
 
   Future<void> _getLatestTeetimes() async {
     try {
-      final List<TeeTimeDTO>? latestTeeTimes = await _teeTimeService.getLatestTeetimes();
+      final List<TeeTimeDTO>? latestTeeTimes =
+          await _teeTimeService.getLatestTeetimes();
       if (mounted) {
         setState(() {
           _userTeeTimes = latestTeeTimes!;
@@ -78,15 +79,18 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
 
       if (mounted) {
         if (user != null) {
-          final List<TeeTimeDTO>? teeTimes = await _teeTimeService.getTeeTimesForSpecificUser(user.id);
+          final List<TeeTimeDTO>? teeTimes =
+              await _teeTimeService.getTeeTimesForSpecificUser(user.id);
           if (teeTimes != null && teeTimes.isNotEmpty) {
             setState(() {
               _userTeeTimes = teeTimes;
-              _clearFields(); // Clear fields before populating
+              _clearFields();
               _populateFields(teeTimes.first);
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Tee times fetched successfully for ${user.name}")),
+              SnackBar(
+                  content:
+                      Text("Tee times fetched successfully for ${user.name}")),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -142,7 +146,8 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
       await _teeTimeService.deleteTeeTime(_selectedTeeTimeId!);
 
       setState(() {
-        _userTeeTimes.removeWhere((teeTime) => teeTime.id == _selectedTeeTimeId);
+        _userTeeTimes
+            .removeWhere((teeTime) => teeTime.id == _selectedTeeTimeId);
         _selectedTeeTimeId = null;
         _clearFields();
       });
@@ -204,25 +209,25 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  
-                   SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                     onPressed: _searchTeeTimeByEmail,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                      backgroundColor: Colors.brown, // Brown background color
-                      foregroundColor: Colors.white, // White text color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: _searchTeeTimeByEmail,
+                      style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        backgroundColor: Colors.brown,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text(
+                        "Vyhladaj Tee Time",
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
-                    child: Text(
-                      "Vyhladaj Tee Time",
-                      style: TextStyle(fontSize: 18),
-                    ),
                   ),
-                ),
                   SizedBox(height: 20),
                   Text(
                     "Tee Times",
@@ -239,7 +244,8 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                               margin: EdgeInsets.symmetric(vertical: 8),
                               child: ListTile(
                                 title: Text("Tee Time ID: ${teeTime.id}"),
-                                subtitle: Text("Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
+                                subtitle: Text(
+                                    "Date: ${DateFormat('yyyy-MM-dd').format(teeTime.teeTime)}"),
                                 selected: _selectedTeeTimeId == teeTime.id,
                                 selectedTileColor: Colors.grey[300],
                                 onTap: () {
@@ -253,25 +259,26 @@ class _DeleteTeeTimeScreenState extends State<DeleteTeeTimeScreen> {
                           },
                         )
                       : Text("No tee times available."),
-                       SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                     onPressed: _selectedTeeTimeId != null ? _deleteTeeTime : null,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                      backgroundColor: Colors.brown, // Brown background color
-                      foregroundColor: Colors.white, // White text color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed:
+                          _selectedTeeTimeId != null ? _deleteTeeTime : null,
+                      style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        backgroundColor: Colors.brown,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text(
+                        "Vymaz Tee Time",
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
-                    child: Text(
-                      "Vymaz Tee Time",
-                      style: TextStyle(fontSize: 18),
-                    ),
                   ),
-                ),
-                 
                 ],
               ),
             ),

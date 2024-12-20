@@ -44,37 +44,28 @@ class AccommodationScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Add spacing below the app bar
             SizedBox(height: screenHeight * 0.015),
-
-            // Brown strip with screen title
             Container(
               width: double.infinity,
-              color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+              color: const Color.fromARGB(201, 146, 96, 52),
               padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
               child: Text(
                 'Detaily Ubytovania',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenHeight * 0.021, // Relative font size
+                  fontSize: screenHeight * 0.021,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-
-            // Hotel Image Placeholder
             const HotelImage(imageUrl: 'assets/icons/hotel.jpg'),
-
-            // Hotel Details Section
             HotelDetails(
               hotelName: hotelName,
               stars: stars,
               region: region,
               country: country,
             ),
-
-            // Accommodation Details Section
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

@@ -122,6 +122,7 @@ void main() {
           userIds: [1, 2, 3],
           golfCourseId: 101,
           green: true,
+          transport: true,
           holes: 18,
           adults: 3,
           juniors: 1,
@@ -148,7 +149,7 @@ void main() {
 
     testWidgets('navigates to AccommodationScreen when accommodations exist',
         (WidgetTester tester) async {
-      // Mock HotelDTO
+      // Mocking HotelDTO
       final hotel = HotelDTO(
         id: 101,
         name: 'Mock Hotel',

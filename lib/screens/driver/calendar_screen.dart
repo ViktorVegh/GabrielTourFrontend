@@ -28,7 +28,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   late Future<DrivesCalendarDTO> calendarData;
   DateTime? selectedDate;
   DateTime visibleMonth = DateTime.now();
-  String? userRole; // Tracks the currently visible month
+  String? userRole;
 
   @override
   void initState() {
@@ -44,18 +44,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
       if (token != null) {
         final role = widget.jwtService.getRoleFromToken(token);
         setState(() {
-          userRole = role; // Update the user role
+          userRole = role;
         });
       } else {
         setState(() {
-          userRole = "unknown"; // Default role if token is null
+          userRole = "unknown";
         });
         debugPrint("Token is null. Unable to determine user role.");
       }
     } catch (e) {
       debugPrint("Error fetching user role: $e");
       setState(() {
-        userRole = "unknown"; // Default role if unable to fetch
+        userRole = "unknown";
       });
     }
   }
@@ -68,32 +68,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 1, // Slight elevation
+        elevation: 1,
         title: Padding(
           padding: EdgeInsets.only(top: screenHeight * 0.02),
           child: Image.asset(
-            'assets/icons/gabrieltour-logo-2023.png', // Logo
-            height: screenHeight * 0.04, // Relative height
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.04,
           ),
         ),
-        centerTitle: true, // Center the logo
+        centerTitle: true,
       ),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Screen Title Container
-          SizedBox(height: screenHeight * 0.015), // Relative spacing
+          SizedBox(height: screenHeight * 0.015),
           Container(
             width: double.infinity,
-            color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+            color: const Color.fromARGB(201, 146, 96, 52),
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
             child: Text(
-              'Drives Calendar', // Screen Title
+              'Drives Calendar',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: screenHeight * 0.021, // Relative font size
+                fontSize: screenHeight * 0.021,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -237,7 +237,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // Group drives by their date
+  // drives by their date
   Map<DateTime, List<DriveDTO>> _groupDrivesByDate(List<DriveDTO> drives) {
     final Map<DateTime, List<DriveDTO>> grouped = {};
     for (var drive in drives) {
@@ -252,7 +252,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return grouped;
   }
 
-  // Create event map for the calendar
+  // event map for the calendar
   Map<DateTime, List<DriveDTO>> _createEventMap(List<DriveDTO> drives) {
     final Map<DateTime, List<DriveDTO>> eventMap = {};
     for (var drive in drives) {

@@ -74,7 +74,7 @@ class PersonService {
     if (response.statusCode == 200) {
       return PersonDTO.fromJson(json.decode(response.body));
     } else if (response.statusCode == 404) {
-      return null; // Not found
+      return null;
     } else {
       throw Exception('Failed to load person by profis ID');
     }

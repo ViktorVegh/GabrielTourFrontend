@@ -13,14 +13,12 @@ class OfficeWebDashboard extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/office'); // Navigate to Create Tee Time
+                Navigator.pushNamed(context, '/office');
               },
               child: Text('Create Tee Time'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Add navigation for other office functionalities
-              },
+              onPressed: () {},
               child: Text('Manage Drivers'),
             ),
           ],

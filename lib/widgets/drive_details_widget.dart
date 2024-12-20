@@ -45,7 +45,7 @@ class DriveDetailsWidget extends StatelessWidget {
           padding: EdgeInsets.only(top: screenHeight * 0.02),
           child: Image.asset(
             'assets/icons/gabrieltour-logo-2023.png',
-            height: screenHeight * 0.04, // Logo height
+            height: screenHeight * 0.04,
           ),
         ),
         centerTitle: true,
@@ -54,17 +54,16 @@ class DriveDetailsWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight * 0.015),
-          // Brown bar with "Drive Details" title
           Container(
             width: double.infinity,
-            color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+            color: const Color.fromARGB(201, 146, 96, 52),
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
             child: Text(
-              'Drive Details', // Bar text
+              'Drive Details',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: screenHeight * 0.021, // Relative font size
+                fontSize: screenHeight * 0.021,
                 fontWeight: FontWeight.w600,
               ),
             ),

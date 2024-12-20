@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import intl for date formatting
+import 'package:intl/intl.dart';
 
 class TransportationCard extends StatelessWidget {
   final String type; // flight, car, or bus
@@ -95,7 +95,7 @@ class TransportationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _formatTime(departureTime), // Format departure time
+                      _formatTime(departureTime), // Formating departure time
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -124,7 +124,7 @@ class TransportationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _formatTime(arrivalTime), // Format arrival time
+                      _formatTime(arrivalTime), // Formating arrival time
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -150,11 +150,11 @@ class TransportationCard extends StatelessWidget {
   String _getDisplayNameForType(String type) {
     switch (type.toLowerCase()) {
       case 'flight':
-        return 'Let'; // Replace "flight" with "Let"
+        return 'Let'; // Replacing "flight" with "Let" for Slovak naming
       case 'car':
-        return 'Auto'; // Example for car
+        return 'Auto'; //  for car
       case 'bus':
-        return 'Autobus'; // Example for bus
+        return 'Autobus'; //  for bus
       default:
         return 'Neznáme'; // Default case for unknown types
     }

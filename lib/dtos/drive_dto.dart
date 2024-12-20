@@ -7,7 +7,7 @@ class DriveDTO {
   final int? driverId;
   final String departurePlace;
   final String arrivalPlace;
-  final List<int> userIds; // Made non-nullable
+  final List<int> userIds;
 
   DriveDTO({
     required this.id,
@@ -18,7 +18,7 @@ class DriveDTO {
     this.driverId,
     required this.departurePlace,
     required this.arrivalPlace,
-    required this.userIds, // Ensure it's required
+    required this.userIds,
   });
 
   factory DriveDTO.fromJson(Map<String, dynamic> json) {
@@ -57,7 +57,7 @@ class DriveDTO {
     String? pickupTime,
     String? dropoffTime,
     int? driverId,
-    List<int>? userIds, // Allow overriding userIds in copyWith
+    List<int>? userIds,
   }) {
     return DriveDTO(
       id: id,

@@ -13,18 +13,17 @@ class TeeTimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Screen size for relative styling
     final screenWidth = MediaQuery.of(context).size.width;
-    final baseFontSize = screenWidth * 0.04; // Relative base font size
-    final smallFontSize = baseFontSize * 0.8; // Smaller text
-    final largeFontSize = baseFontSize * 1.2; // Larger text
+    final baseFontSize = screenWidth * 0.04;
+    final smallFontSize = baseFontSize * 0.8;
+    final largeFontSize = baseFontSize * 1.2;
 
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.03), // Relative padding
+        padding: EdgeInsets.all(screenWidth * 0.03),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -41,7 +40,7 @@ class TeeTimeWidget extends StatelessWidget {
                       fontSize: largeFontSize,
                     ),
                   ),
-                  if (teeTime.note != null) // Optional note
+                  if (teeTime.note != null)
                     Text(
                       teeTime.note!,
                       style: TextStyle(

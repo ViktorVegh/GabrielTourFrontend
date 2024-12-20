@@ -40,18 +40,15 @@ class AuthScreenState extends State<AuthScreen> {
       }
 
       try {
-        // Perform login and get the token
         final token = await widget.authService.login(
           LoginRequest(email: email, password: password),
         );
 
-        // Save the token
         await widget.jwtService.saveToken(token);
 
-        // Decode the user role from the token
         final String role = widget.jwtService.getRoleFromToken(token);
 
-        // Navigate based on the role
+        // Navigation based on the role
         if (role == 'office') {
           Navigator.pushReplacementNamed(context, '/officeDashboard');
         } else if (role == 'user') {

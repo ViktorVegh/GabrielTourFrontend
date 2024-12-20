@@ -64,7 +64,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     final sliderTop = screenHeight * 0.06;
-    final sliderHeight = screenHeight * 0.8;
+    // final sliderHeight = screenHeight * 0.8;
     final mainContentPadding = sliderTop + screenHeight * 0.30;
 
     return RoleSpecificNavbar(
@@ -86,18 +86,17 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Brown bar under app bar
-            SizedBox(height: screenHeight * 0.015), // Relative gap
+            SizedBox(height: screenHeight * 0.015),
             Container(
               width: double.infinity,
-              color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+              color: const Color.fromARGB(201, 146, 96, 52),
               padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
               child: Text(
-                'Detaily Zájazdu', // Screen title
+                'Detaily Zájazdu',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenHeight * 0.021, // Relative font size
+                  fontSize: screenHeight * 0.021,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -165,8 +164,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               left: 0,
                               right: 0,
                               child: SizedBox(
-                                height: screenHeight *
-                                    0.28, // Directly set a larger height
+                                height: screenHeight * 0.28,
                                 child: TransportationSlider(
                                   transportations: order
                                       .transportationReservations

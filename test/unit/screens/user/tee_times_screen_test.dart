@@ -36,6 +36,7 @@ void main() {
           userIds: [101, 102, 103],
           golfCourseId: 1,
           green: true,
+          transport: true,
           holes: 18,
           adults: 3,
           juniors: 0,
@@ -48,6 +49,7 @@ void main() {
           userIds: [104, 105, 106, 107],
           golfCourseId: 2,
           green: false,
+          transport: true,
           holes: 9,
           adults: 4,
           juniors: 0,
@@ -55,9 +57,24 @@ void main() {
         ),
       ];
 
+      final golfCourseNames = ['Sunny Golf Club', 'Rainy Golf Club'];
+
       await tester.pumpWidget(
         MaterialApp(
-          home: TeeTimesScreen(teeTimes: teeTimes),
+          home: Scaffold(
+            body: ListView(
+              children: [
+                TeeTimeWidget(
+                  teeTime: teeTimes[0],
+                  golfCourseName: golfCourseNames[0],
+                ),
+                TeeTimeWidget(
+                  teeTime: teeTimes[1],
+                  golfCourseName: golfCourseNames[1],
+                ),
+              ],
+            ),
+          ),
         ),
       );
 
@@ -65,32 +82,38 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert
-      expect(find.byType(TeeTimeWidget), findsNWidgets(2)); // Two widgets
-      expect(find.text('Golf Course Name'), findsNWidgets(2));
+      expect(find.byType(TeeTimeWidget), findsNWidgets(2));
+      expect(find.text('Sunny Golf Club'), findsOneWidget);
+      expect(find.text('Rainy Golf Club'), findsOneWidget);
       expect(find.text('Morning round'), findsOneWidget);
     });
-
     testWidgets('renders correct data in TeeTimeWidget for each tee time',
         (WidgetTester tester) async {
       // Arrange
-      final teeTimes = [
-        TeeTimeDTO(
-          id: 1,
-          teeTime: DateTime(2023, 12, 10, 9, 30),
-          groupSize: 3,
-          userIds: [101, 102, 103],
-          golfCourseId: 1,
-          green: true,
-          holes: 18,
-          adults: 3,
-          juniors: 0,
-          note: 'Morning round',
-        ),
-      ];
+      final teeTime = TeeTimeDTO(
+        id: 1,
+        teeTime: DateTime(2023, 12, 10, 9, 30),
+        groupSize: 3,
+        userIds: [101, 102, 103],
+        golfCourseId: 1,
+        green: true,
+        transport: true,
+        holes: 18,
+        adults: 3,
+        juniors: 0,
+        note: 'Morning round',
+      );
+
+      final golfCourseName = 'Sunny Golf Club';
 
       await tester.pumpWidget(
         MaterialApp(
-          home: TeeTimesScreen(teeTimes: teeTimes),
+          home: Scaffold(
+            body: TeeTimeWidget(
+              teeTime: teeTime,
+              golfCourseName: golfCourseName,
+            ),
+          ),
         ),
       );
 
@@ -98,12 +121,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert
-      expect(find.text('Golf Course Name'),
-          findsOneWidget); // Placeholder course name
-      expect(find.text('10.12.2023'), findsOneWidget); // Date
-      expect(find.textContaining('9:30'), findsOneWidget); // Time
-      expect(find.text('3/4'), findsOneWidget); // Group size
-      expect(find.text('Morning round'), findsOneWidget); // Note
+      expect(find.text('Sunny Golf Club'), findsOneWidget);
+      expect(find.text('10.12.2023'), findsOneWidget);
+      expect(find.text('9:30'), findsOneWidget);
+      expect(find.text('3/4'), findsOneWidget);
+      expect(find.text('Morning round'), findsOneWidget);
     });
   });
 }

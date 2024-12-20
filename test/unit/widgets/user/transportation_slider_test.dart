@@ -22,7 +22,7 @@ void main() {
     ];
 
     testWidgets('renders transportation cards', (WidgetTester tester) async {
-      // Render the widget
+      // Rendering the widget
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
@@ -47,7 +47,7 @@ void main() {
       expect(find.text(arrivalTimeText), findsOneWidget);
       expect(find.text('DATUM: 01.12.2023'), findsOneWidget);
 
-      // Swipe to the second transportation card
+      // Swiping to the second transportation card
       await tester.drag(
         find.byType(PageView),
         const Offset(-400, 0), // Swipe left
@@ -74,7 +74,7 @@ void main() {
 
     testWidgets('renders correct number of dots for transportations',
         (WidgetTester tester) async {
-      // Render the widget
+      // Rendering the widget
       await tester.pumpWidget(
         MaterialApp(
           home: Material(

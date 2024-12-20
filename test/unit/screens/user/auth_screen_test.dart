@@ -145,22 +145,23 @@ void main() {
             widget.text.toPlainText().contains('Vytvorenie hesla'),
       );
 
-      expect(vytvorenieHeslaFinder, findsOneWidget); // Ensure the toggle exists
+      expect(
+          vytvorenieHeslaFinder, findsOneWidget); // Ensuring the toggle exists
       await tester.tap(vytvorenieHeslaFinder);
       await tester.pumpAndSettle();
 
-      // Enter email and tap the reset button
+      // Entering email and tap the reset button
       await tester.enterText(find.widgetWithText(TextField, 'Email'), email);
       await tester.tap(find.text('Odoslať overovací email'));
       await tester.pumpAndSettle();
 
-      // Check for the dialog
-      debugDumpApp(); // Dump the widget tree for analysis
+      // Checking for the dialog
+      debugDumpApp(); // Dumping the widget tree for analysis
       verify(mockAuthService.resetPassword(email)).called(1);
-      expect(
-          find.text('Chyba'), findsOneWidget); // Ensure dialog title is present
+      expect(find.text('Chyba'),
+          findsOneWidget); // Ensuring dialog title is present
       expect(find.text(errorMessage),
-          findsOneWidget); // Check for the error message
+          findsOneWidget); // Checking for the error message
     });
   });
 }

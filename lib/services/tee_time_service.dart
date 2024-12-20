@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:gabriel_tour_app/dtos/golf_course_dto.dart';
-import 'package:gabriel_tour_app/services/person_service.dart';
+// import 'package:gabriel_tour_app/services/person_service.dart';
 import 'package:http/http.dart' as http;
 import 'jwt_service.dart';
 import 'package:gabriel_tour_app/dtos/tee_time_dto.dart';
@@ -9,13 +9,13 @@ import 'package:gabriel_tour_app/dtos/tee_time_request_dto.dart';
 class TeeTimeService {
   final String baseUrl = 'http://13.53.236.35:9090/api/teetimes';
   final JwtService _jwtService;
-  
+
   TeeTimeService(this._jwtService);
 
   Future<List<TeeTimeDTO>?> getTeeTimesForUser() async {
     try {
       //final userId = await _jwtService.getUserIdFromToken();
-      const userId =9388;
+      const userId = 9388;
       if (userId == null) {
         print('Error: User ID not found in token.');
         return null;
@@ -53,7 +53,8 @@ class TeeTimeService {
       return null;
     }
   }
-Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
+
+  Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
     try {
       final token = await _jwtService.getToken();
       if (token == null) {
@@ -87,36 +88,36 @@ Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
       return null;
     }
   }
-  
-   Future<GolfCourseDTO?> createGolfCourse(String name) async {
-  try {
-    final token = await _jwtService.getToken();
-    if (token == null) {
-      print('Error: Token not found.');
-      return null;
-    }
-    final response = await http.post(
-      Uri.parse('$baseUrl/create_golf_course'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({'name': name}), // Fixed here
-    );
 
-    if (response.statusCode == 200) {
-      return GolfCourseDTO.fromJson(json.decode(response.body));
-    } else {
-      print(
-          'Error: Failed to create tee time. Status code: ${response.statusCode}');
+  Future<GolfCourseDTO?> createGolfCourse(String name) async {
+    try {
+      final token = await _jwtService.getToken();
+      if (token == null) {
+        print('Error: Token not found.');
+        return null;
+      }
+      final response = await http.post(
+        Uri.parse('$baseUrl/create_golf_course'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({'name': name}), // Fixed here
+      );
+
+      if (response.statusCode == 200) {
+        return GolfCourseDTO.fromJson(json.decode(response.body));
+      } else {
+        print(
+            'Error: Failed to create tee time. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error creating tee time: $e');
+      print('Stack trace: $stackTrace');
       return null;
     }
-  } catch (e, stackTrace) {
-    print('Error creating tee time: $e');
-    print('Stack trace: $stackTrace');
-    return null;
   }
-}
 
   Future<TeeTimeDTO?> createTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
     try {
@@ -149,7 +150,8 @@ Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
       return null;
     }
   }
-   Future<TeeTimeDTO?> editTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
+
+  Future<TeeTimeDTO?> editTeeTime(TeeTimeRequestDTO teeTimeRequest) async {
     try {
       final token = await _jwtService.getToken();
       if (token == null) {
@@ -179,6 +181,7 @@ Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
       return null;
     }
   }
+
   Future<List<TeeTimeDTO>?> getTeeTimesForSpecificUser(int id) async {
     try {
       if (id == null) {
@@ -218,9 +221,9 @@ Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
       return null;
     }
   }
-   Future<List<TeeTimeDTO>?> getLatestTeetimes() async {
-    try {
 
+  Future<List<TeeTimeDTO>?> getLatestTeetimes() async {
+    try {
       final token = await _jwtService.getToken();
       if (token == null) {
         print('Error: Token not found.');
@@ -253,6 +256,7 @@ Future<GolfCourseDTO?> getGolfCourseByName(String name) async {
       return null;
     }
   }
+
   Future<TeeTimeDTO?> deleteTeeTime(int id) async {
     try {
       final token = await _jwtService.getToken();

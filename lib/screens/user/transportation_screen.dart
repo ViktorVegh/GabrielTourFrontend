@@ -97,10 +97,10 @@ class TransportationScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: screenHeight * 0.015), // Relative gap
+          SizedBox(height: screenHeight * 0.015),
           Container(
             width: double.infinity,
-            color: const Color.fromARGB(201, 146, 96, 52), // Brown background
+            color: const Color.fromARGB(201, 146, 96, 52),
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
             child: Text(
               'Doprava',

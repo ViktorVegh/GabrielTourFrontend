@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabriel_tour_app/dtos/drive_dto.dart';
-import 'package:gabriel_tour_app/dtos/person_dto.dart';
+// import 'package:gabriel_tour_app/dtos/person_dto.dart';
 import 'package:gabriel_tour_app/services/person_service.dart';
 
 class UpcomingDriveItem extends StatefulWidget {

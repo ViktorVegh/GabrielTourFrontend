@@ -11,7 +11,7 @@ class FakeOrderService implements OrderService {
   Future<OrderDTO?> Function()? onGetOrderDetails;
 
   @override
-  String get baseUrl => 'https://dummy.url'; // Provide a dummy value
+  String get baseUrl => 'https://dummy.url'; // dummy value
 
   @override
   Future<OrderDTO?> getOrderDetailsForUser() {

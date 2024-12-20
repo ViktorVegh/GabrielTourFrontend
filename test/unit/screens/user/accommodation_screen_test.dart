@@ -36,7 +36,7 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle(); // Ensure all UI updates are completed
+    await tester.pumpAndSettle(); // Ensuring all UI updates are completed
 
     // Assert: Verify that the expected elements appear on the screen
     expect(find.text('Mock Hotel'), findsOneWidget); // Hotel name

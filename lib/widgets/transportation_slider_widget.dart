@@ -1,191 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class TransportationSlider extends StatelessWidget {
-//   final List<Map<String, dynamic>> transportations;
-
-//   const TransportationSlider({super.key, required this.transportations});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: 200, // Fixed or adjustable height, depending on the content
-//       child: Column(
-//         children: [
-//           Expanded(
-//             child: PageView.builder(
-//               itemCount: transportations.length,
-//               itemBuilder: (context, index) {
-//                 final transport = transportations[index];
-//                 final duration = calculateDuration(
-//                   transport['departureTime'],
-//                   transport['arrivalTime'],
-//                 );
-
-//                 return Padding(
-//                   padding: const EdgeInsets.all(16.0),
-//                   child: Card(
-//                     color: Colors.white.withOpacity(0.95),
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(16),
-//                     ),
-//                     child: Padding(
-//                       padding: const EdgeInsets.symmetric(
-//                           vertical: 16.0, horizontal: 24.0),
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.stretch,
-//                         mainAxisSize: MainAxisSize.min,
-//                         children: [
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               // Departure Info
-//                               Column(
-//                                 mainAxisSize: MainAxisSize.min,
-//                                 children: [
-//                                   Text(
-//                                     transport['departureTime'].format(context),
-//                                     style: const TextStyle(
-//                                       fontSize: 30,
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   Text(
-//                                     transport['departurePlace'],
-//                                     style: const TextStyle(
-//                                       fontSize: 22,
-//                                       color: Colors.black,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                               // Arrow with duration
-//                               Expanded(
-//                                 child: Column(
-//                                   children: [
-//                                     Padding(
-//                                       padding: const EdgeInsets.symmetric(
-//                                           horizontal: 16.0),
-//                                       child: CustomPaint(
-//                                         painter: ArrowPainter(),
-//                                         size: const Size(double.infinity, 20),
-//                                       ),
-//                                     ),
-//                                     const SizedBox(height: 8),
-//                                     Text(
-//                                       '${duration.inHours}h ${duration.inMinutes.remainder(60)}m',
-//                                       style: const TextStyle(
-//                                         fontSize: 16,
-//                                         fontWeight: FontWeight.bold,
-//                                         color: Colors.blueGrey,
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-//                               // Arrival Info
-//                               Column(
-//                                 mainAxisSize: MainAxisSize.min,
-//                                 children: [
-//                                   Text(
-//                                     transport['arrivalTime'].format(context),
-//                                     style: const TextStyle(
-//                                       fontSize: 30,
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   // Reduced spacing or removed SizedBox
-//                                   Padding(
-//                                     padding: const EdgeInsets.only(
-//                                         top: 2.0), // Fine-tuned spacing
-//                                     child: Text(
-//                                       transport['arrivalPlace'],
-//                                       style: const TextStyle(
-//                                         fontSize: 22,
-//                                         color: Colors.black,
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ],
-//                           ),
-//                           const SizedBox(height: 32),
-//                           Align(
-//                             alignment: Alignment.bottomLeft,
-//                             child: Text(
-//                               'DATUM: ${transport['date']}',
-//                               style: const TextStyle(
-//                                 fontSize: 18,
-//                                 color: Color.fromARGB(255, 0, 0, 0),
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//           // Dots indicator
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: List.generate(
-//               transportations.length,
-//               (index) => const Padding(
-//                 padding: EdgeInsets.all(4.0),
-//                 child: CircleAvatar(
-//                   radius: 4.0,
-//                   backgroundColor: Colors.blue,
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Duration calculateDuration(TimeOfDay startTime, TimeOfDay endTime) {
-//     final now = DateTime.now();
-//     final startDateTime = DateTime(
-//         now.year, now.month, now.day, startTime.hour, startTime.minute);
-//     final endDateTime =
-//         DateTime(now.year, now.month, now.day, endTime.hour, endTime.minute);
-//     return endDateTime.difference(startDateTime);
-//   }
-// }
-
-// class ArrowPainter extends CustomPainter {
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     final paint = Paint()
-//       ..color = const Color.fromARGB(255, 135, 135, 135)
-//       ..strokeWidth = 2
-//       ..style = PaintingStyle.stroke;
-
-//     final arrowPath = Path();
-//     const verticalOffset = 15; // Adjust this value to move the arrow down
-
-//     // Adjust the vertical position by adding `verticalOffset`
-//     arrowPath.moveTo(
-//         0, size.height / 2 + verticalOffset); // Start from the left
-//     arrowPath.lineTo(size.width - 0,
-//         size.height / 2 + verticalOffset); // Line to near the end
-//     arrowPath.relativeLineTo(-10, -10); // Arrowhead top
-//     arrowPath.moveTo(
-//         size.width - 0, size.height / 2 + verticalOffset); // Return to the end
-//     arrowPath.relativeLineTo(-10, 10); // Arrowhead bottom
-
-//     canvas.drawPath(arrowPath, paint);
-//   }
-
-//   @override
-//   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-// }
-
 import 'package:flutter/material.dart';
 
 class TransportationSlider extends StatelessWidget {
@@ -199,7 +11,7 @@ class TransportationSlider extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: screenHeight * 0.25, // 25% of screen height
+      height: screenHeight * 0.25,
       child: Column(
         children: [
           Expanded(
@@ -213,7 +25,7 @@ class TransportationSlider extends StatelessWidget {
                 );
 
                 return Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.04), // 4% padding
+                  padding: EdgeInsets.all(screenWidth * 0.04),
                   child: Card(
                     color: Colors.white.withOpacity(0.95),
                     shape: RoundedRectangleBorder(
@@ -221,8 +33,8 @@ class TransportationSlider extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        vertical: screenHeight * 0.02, // 2% vertical padding
-                        horizontal: screenWidth * 0.05, // 5% horizontal padding
+                        vertical: screenHeight * 0.02,
+                        horizontal: screenWidth * 0.05,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -239,14 +51,14 @@ class TransportationSlider extends StatelessWidget {
                                   Text(
                                     transport['departureTime'].format(context),
                                     style: TextStyle(
-                                      fontSize: screenHeight * 0.03, // 3%
+                                      fontSize: screenHeight * 0.03,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     transport['departurePlace'],
                                     style: TextStyle(
-                                      fontSize: screenHeight * 0.025, // 2.5%
+                                      fontSize: screenHeight * 0.025,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -262,14 +74,14 @@ class TransportationSlider extends StatelessWidget {
                                       child: CustomPaint(
                                         painter: ArrowPainter(),
                                         size: Size(double.infinity,
-                                            screenHeight * 0.02), // 2%
+                                            screenHeight * 0.02),
                                       ),
                                     ),
                                     SizedBox(height: screenHeight * 0.01),
                                     Text(
                                       '${duration.inHours}h ${duration.inMinutes.remainder(60)}m',
                                       style: TextStyle(
-                                        fontSize: screenHeight * 0.02, // 2%
+                                        fontSize: screenHeight * 0.02,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.blueGrey,
                                       ),
@@ -284,17 +96,17 @@ class TransportationSlider extends StatelessWidget {
                                   Text(
                                     transport['arrivalTime'].format(context),
                                     style: TextStyle(
-                                      fontSize: screenHeight * 0.03, // 3%
+                                      fontSize: screenHeight * 0.03,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        top: screenHeight * 0.005), // 0.5%
+                                        top: screenHeight * 0.005),
                                     child: Text(
                                       transport['arrivalPlace'],
                                       style: TextStyle(
-                                        fontSize: screenHeight * 0.025, // 2.5%
+                                        fontSize: screenHeight * 0.025,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -303,13 +115,13 @@ class TransportationSlider extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: screenHeight * 0.03), // 3%
+                          SizedBox(height: screenHeight * 0.03),
                           Align(
                             alignment: Alignment.bottomLeft,
                             child: Text(
                               'DATUM: ${transport['date']}',
                               style: TextStyle(
-                                fontSize: screenHeight * 0.022, // 2.2%
+                                fontSize: screenHeight * 0.022,
                                 color: const Color.fromARGB(255, 0, 0, 0),
                               ),
                             ),
@@ -328,9 +140,9 @@ class TransportationSlider extends StatelessWidget {
             children: List.generate(
               transportations.length,
               (index) => Padding(
-                padding: EdgeInsets.all(screenWidth * 0.01), // 1% of width
+                padding: EdgeInsets.all(screenWidth * 0.01),
                 child: CircleAvatar(
-                  radius: screenHeight * 0.005, // 0.5% of height
+                  radius: screenHeight * 0.005,
                   backgroundColor: Colors.blue,
                 ),
               ),
@@ -360,7 +172,7 @@ class ArrowPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final arrowPath = Path();
-    const verticalOffset = 15; // Adjusted dynamically if needed
+    const verticalOffset = 15;
 
     arrowPath.moveTo(0, size.height / 2 + verticalOffset);
     arrowPath.lineTo(size.width - 0, size.height / 2 + verticalOffset);

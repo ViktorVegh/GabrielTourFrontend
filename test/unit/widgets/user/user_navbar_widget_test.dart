@@ -40,7 +40,7 @@ void main() {
             bottomNavigationBar: UserNavbar(
               currentIndex: 0,
               onTap: (index) {
-                selectedIndex = index; // Capture tapped index
+                selectedIndex = index; // Captures tapped index
               },
             ),
           ),

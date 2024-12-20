@@ -9,13 +9,13 @@ class ManageDriveScreen extends StatefulWidget {
   final DriveDTO drive;
   final DriveService driveService;
   final PersonService personService;
-  final String userRole; // Add userRole
+  final String userRole;
 
   ManageDriveScreen({
     required this.drive,
     required this.driveService,
     required this.personService,
-    required this.userRole, // Add this parameter
+    required this.userRole,
   });
 
   @override
@@ -103,7 +103,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Access denied: Insufficient permissions')),
       );
-      return; // Stop the function if the role is not authorized
+      return;
     }
 
     try {
@@ -117,11 +117,9 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
         driverId: _selectedDriverId,
       );
 
-      // Print the payload being sent
       print('--- Update Drive Payload ---');
       print('Drive ID: ${widget.drive.id}');
-      print(
-          'Payload: ${updatedDrive.toJson()}'); // Assuming a toJson() method exists
+      print('Payload: ${updatedDrive.toJson()}');
 
       await widget.driveService.updateDrive(widget.drive.id, updatedDrive);
 
@@ -130,7 +128,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
       );
       Navigator.pop(context);
     } catch (e) {
-      print('Update Error: $e'); // Log the error message
+      print('Update Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update drive: $e')),
       );
@@ -142,7 +140,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Access denied: Insufficient permissions')),
       );
-      return; // Stop the function if the role is not authorized
+      return;
     }
 
     try {
@@ -156,7 +154,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
       );
       Navigator.pop(context);
     } catch (e) {
-      print('Delete Error: $e'); // Log the error message
+      print('Delete Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to delete drive: $e')),
       );
@@ -170,19 +168,18 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // White AppBar background
+        backgroundColor: Colors.white,
         elevation: 1,
         title: Padding(
           padding: EdgeInsets.only(top: screenHeight * 0.02),
           child: Image.asset(
-            'assets/icons/gabrieltour-logo-2023.png', // Logo asset
-            height: screenHeight * 0.04, // Logo height relative to screen
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.04,
           ),
         ),
-        centerTitle: true, // Center the logo
+        centerTitle: true,
       ),
-      backgroundColor:
-          const Color.fromARGB(255, 248, 248, 248), // Light gray background
+      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -191,17 +188,14 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                      height: screenHeight * 0.015), // Spacing below AppBar
-                  // Title Section with brown bar
+                  SizedBox(height: screenHeight * 0.015),
                   Container(
                     width: double.infinity,
-                    color: const Color.fromARGB(
-                        201, 146, 96, 52), // Brown background
+                    color: const Color.fromARGB(201, 146, 96, 52),
                     padding:
                         EdgeInsets.symmetric(vertical: screenHeight * 0.01),
                     child: Text(
-                      'Pridať jazdu do kalendára', // Screen Title
+                      'Pridať jazdu do kalendára',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -210,7 +204,6 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
                       ),
                     ),
                   ),
-                  // Form Content
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
@@ -236,7 +229,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Upravte Detaily Jazdy", // Title
+                            "Upravte Detaily Jazdy",
                             style: TextStyle(
                               fontSize: screenWidth * 0.05,
                               fontWeight: FontWeight.bold,
@@ -292,8 +285,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
                               screenWidth, screenHeight),
                           _buildDriverDropdown(screenWidth, screenHeight),
                           SizedBox(height: screenHeight * 0.02),
-                          _buildActions(
-                              screenWidth), // Buttons for Submit/Delete
+                          _buildActions(screenWidth),
                         ],
                       ),
                     ),
@@ -317,10 +309,9 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
             labelText: label,
             border: OutlineInputBorder(),
             filled: true,
-            fillColor: Colors.grey[200], // Light gray background
+            fillColor: Colors.grey[200],
             focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Colors.brown, width: 2.0), // Brown border
+              borderSide: BorderSide(color: Colors.brown, width: 2.0),
             ),
           ),
           style: TextStyle(fontSize: screenWidth * 0.035),
@@ -344,10 +335,9 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
             labelText: label,
             border: OutlineInputBorder(),
             filled: true,
-            fillColor: Colors.grey[200], // Light gray background
+            fillColor: Colors.grey[200],
             focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Colors.brown, width: 2.0), // Brown border
+              borderSide: BorderSide(color: Colors.brown, width: 2.0),
             ),
           ),
           style: TextStyle(fontSize: screenWidth * 0.035),
@@ -380,7 +370,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
           child: child ?? const SizedBox.shrink(),
         );
       },
-      initialEntryMode: TimePickerEntryMode.input, // Directly show input mode
+      initialEntryMode: TimePickerEntryMode.input,
     );
     if (time != null) {
       setState(() {
@@ -399,7 +389,7 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
           child: child ?? const SizedBox.shrink(),
         );
       },
-      initialEntryMode: TimePickerEntryMode.input, // Directly show input mode
+      initialEntryMode: TimePickerEntryMode.input,
     );
     if (time != null) {
       setState(() {
@@ -419,10 +409,9 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
             labelText: 'Assign Driver',
             border: OutlineInputBorder(),
             filled: true,
-            fillColor: Colors.grey[200], // Light gray background
+            fillColor: Colors.grey[200],
             focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Colors.brown, width: 2.0), // Brown border
+              borderSide: BorderSide(color: Colors.brown, width: 2.0),
             ),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
@@ -454,20 +443,18 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
 
   Widget _buildActions(double screenWidth) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: screenWidth * 0.001), // Small relative gap
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.001),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Delete Button
           SizedBox(
             width: screenWidth * 0.35,
             child: ElevatedButton(
               onPressed: () => _showDeleteConfirmationDialog(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[800], // Darker red color
+                backgroundColor: Colors.red[800],
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15), // Rounded corners
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
               ),
@@ -475,20 +462,19 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
                 'Vymazať jazdu',
                 style: TextStyle(
                   fontSize: screenWidth * 0.035,
-                  color: Colors.white, // White text
+                  color: Colors.white,
                 ),
               ),
             ),
           ),
-          // Update Button
           SizedBox(
             width: screenWidth * 0.35,
             child: ElevatedButton(
               onPressed: _updateDrive,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown, // Update button color
+                backgroundColor: Colors.brown,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15), // Rounded corners
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
               ),
@@ -509,7 +495,6 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
   void _checkUserRole() {
     print('User Role: ${widget.userRole}');
     if (widget.userRole == 'office' || widget.userRole == 'drivermanager') {
-      // Perform operations for authorized roles
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Access denied: Insufficient permissions')),
@@ -526,17 +511,17 @@ class _ManageDriveScreenState extends State<ManageDriveScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text('Zrušiť'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _deleteDrive(); // Proceed with delete
+                Navigator.of(context).pop();
+                _deleteDrive();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[800], // Darker red color
+                backgroundColor: Colors.red[800],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),

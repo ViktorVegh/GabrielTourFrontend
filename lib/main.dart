@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Create services using the `jwtService`
     final drivesScheduleService = DrivesScheduleService(jwtService);
     final driveService = DriveService(jwtService);
     final personService = PersonService(jwtService);

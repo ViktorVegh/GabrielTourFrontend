@@ -36,7 +36,7 @@ class _ManageCalendarScreenState extends State<ManageCalendarScreen> {
     super.initState();
     calendarData = widget.drivesScheduleService.getMonthlyCalendar();
     upcomingDrives = widget.driveService.getAllUntrackedDrives();
-    _fetchUserRole(); // Fetch user role using JwtService
+    _fetchUserRole();
   }
 
   Future<void> _fetchUserRole() async {
@@ -45,60 +45,56 @@ class _ManageCalendarScreenState extends State<ManageCalendarScreen> {
       if (token != null) {
         final role = widget.jwtService.getRoleFromToken(token);
         setState(() {
-          userRole = role; // Update the user role
+          userRole = role;
         });
       } else {
         setState(() {
-          userRole = "unknown"; // Default role if token is null
+          userRole = "unknown";
         });
         print("Token is null. Unable to determine user role.");
       }
     } catch (e) {
       print("Error fetching user role: $e");
       setState(() {
-        userRole = "unknown"; // Default role if unable to fetch
+        userRole = "unknown";
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // White background
-        elevation: 1, // Slight elevation
+        backgroundColor: Colors.white,
+        elevation: 1,
         title: Padding(
-          padding:
-              EdgeInsets.only(top: screenHeight * 0.02), // Relative top padding
+          padding: EdgeInsets.only(top: screenHeight * 0.02),
           child: Image.asset(
-            'assets/icons/gabrieltour-logo-2023.png', // Logo asset
-            height: screenHeight * 0.04, // Logo height relative to screen size
+            'assets/icons/gabrieltour-logo-2023.png',
+            height: screenHeight * 0.04,
           ),
         ),
-        centerTitle: true, // Center the logo in the AppBar
+        centerTitle: true,
       ),
-      backgroundColor:
-          const Color.fromARGB(255, 248, 248, 248), // Background color
+      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title bar below AppBar
-          SizedBox(height: screenHeight * 0.015), // Spacing below AppBar
+          SizedBox(height: screenHeight * 0.015),
           Container(
             width: double.infinity,
-            color: const Color.fromARGB(201, 146, 96, 52), // Brown color
-            padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.01), // Vertical padding
+            color: const Color.fromARGB(201, 146, 96, 52),
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
             child: Text(
-              'Kalenár Jazdy', // Screen Title
+              'Kalenár Jazdy',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white, // White text
-                fontSize: screenHeight * 0.015, // Relative font size
-                fontWeight: FontWeight.w600, // Bold text
+                color: Colors.white,
+                fontSize: screenHeight * 0.015,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

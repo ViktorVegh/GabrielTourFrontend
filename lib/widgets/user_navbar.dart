@@ -1,68 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:gabriel_tour_app/widgets/selectable_bottom_navbar.dart';
-
-// class UserNavbar extends StatelessWidget {
-//   final int currentIndex;
-//   final Function(int) onTap;
-
-//   const UserNavbar({required this.currentIndex, required this.onTap, Key? key})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SelectableBottomNavbar(
-//       currentIndex: currentIndex,
-//       onTap: onTap,
-//       items: [
-//         BottomNavigationBarItem(
-//           icon: SvgPicture.asset(
-//             'assets/icons/navbar/search_trip_icon.svg',
-//             height: 40,
-//             colorFilter: ColorFilter.mode(
-//               currentIndex == 0 ? Color(0xFFE4733A) : Colors.grey,
-//               BlendMode.srcIn,
-//             ),
-//           ),
-//           label: 'Vyhľadaj zájazdy',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: SvgPicture.asset(
-//             'assets/icons/navbar/my_trip_icon.svg',
-//             height: 40,
-//             colorFilter: ColorFilter.mode(
-//               currentIndex == 1 ? Color(0xFFE4733A) : Colors.grey,
-//               BlendMode.srcIn,
-//             ),
-//           ),
-//           label: 'Môj zájazd',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: SvgPicture.asset(
-//             'assets/icons/navbar/message_icon.svg',
-//             height: 40,
-//             colorFilter: ColorFilter.mode(
-//               currentIndex == 2 ? Color(0xFFE4733A) : Colors.grey,
-//               BlendMode.srcIn,
-//             ),
-//           ),
-//           label: 'Správy',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: SvgPicture.asset(
-//             'assets/icons/navbar/profile_icon.svg',
-//             height: 40,
-//             colorFilter: ColorFilter.mode(
-//               currentIndex == 3 ? Color(0xFFE4733A) : Colors.grey,
-//               BlendMode.srcIn,
-//             ),
-//           ),
-//           label: 'Profil',
-//         ),
-//       ],
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:gabriel_tour_app/widgets/selectable_bottom_navbar.dart';
 
@@ -76,15 +11,14 @@ class UserNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min, // Ensure the column takes minimum space
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 16.0), // Add horizontal padding
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Divider(
-            color: const Color.fromARGB(255, 158, 158, 158), // Divider color
-            thickness: 1, // Thickness of the line
-            height: 1, // Height of the divider
+            color: const Color.fromARGB(255, 158, 158, 158),
+            thickness: 1,
+            height: 1,
           ),
         ),
         SelectableBottomNavbar(
@@ -93,31 +27,31 @@ class UserNavbar extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.message, // Flutter icon for "Messages"
+                Icons.message,
                 size: 30,
                 color: currentIndex == 0
-                    ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
-                    : Colors.grey, // Grey when unselected
+                    ? Color.fromARGB(255, 166, 94, 43)
+                    : Colors.grey,
               ),
               label: 'Správy',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.airplane_ticket, // Flutter icon for "My Trip"
+                Icons.airplane_ticket,
                 size: 30,
                 color: currentIndex == 1
-                    ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
-                    : Colors.grey, // Grey when unselected
+                    ? Color.fromARGB(255, 166, 94, 43)
+                    : Colors.grey,
               ),
               label: 'Môj zájazd',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.person, // Flutter icon for "Profile"
+                Icons.person,
                 size: 30,
                 color: currentIndex == 2
-                    ? Color.fromARGB(255, 166, 94, 43) // Brown when selected
-                    : Colors.grey, // Grey when unselected
+                    ? Color.fromARGB(255, 166, 94, 43)
+                    : Colors.grey,
               ),
               label: 'Profil',
             ),
