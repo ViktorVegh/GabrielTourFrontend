@@ -125,4 +125,4 @@ Open the project in Xcode:
 
 open ios/Runner.xcworkspace
 
-In Xcode, select your connected device and click Run to install the ap
+In Xcode, select your connected device and click Run to install the app
